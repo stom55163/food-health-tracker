@@ -115,8 +115,10 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
       <button class="bv" onclick="pi()">📝 粘贴数据</button>
     </div>
     <input type="file" id="fX" accept=".xlsx,.xls,.doc,.docx,.csv,.txt" style="display:none" onchange="si(event)">
-    <textarea class="tx" id="pA" placeholder="或粘贴数据到此处"></textarea>
+    <textarea class="tx" id="pA" placeholder="粘贴数据：日期 大便 早餐 午餐 晚餐 备注"></textarea>
+    <div class="bb"><button class="by" onclick="pv()">👁️ 预览</button><button class="bg2" onclick="pi()">✅ 确认导入</button></div>
     <div class="ir" id="iM"></div>
+    <div id="previewArea" style="display:none;margin-top:4px;"></div>
   </div>
   <div class="cd">
     <div class="ct">💾 数据管理</div>
@@ -365,7 +367,7 @@ function pt(text,ir){
   if(ir)ir.textContent='共 '+lines.length+' 行，开始解析...';
   for(var li=0;li<lines.length;li++){
     var line=lines[li].trim();if(!line||line.match(/^[<日期Date]/))continue;
-    var parts=line.split(/[\t,;，；、|]+/);if(parts.length<2)continue;
+    var parts=line.split(/[\s\t,;，；、|]+/);if(parts.length<2)continue;
     var dk='';
     for(var pi=0;pi<parts.length;pi++){
       var p=parts[pi].trim(),dm=p.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);if(!dm)dm=p.match(/(\d{1,2})[月\/](\d{1,2})日?/);if(dm){dk=(dm[1]?dm[1]:'2026')+'-'+Z(dm[2].replace('月','').replace('日',''))+'-'+Z((dm[3]||'').replace('日',''));parts.splice(pi,1);break}
@@ -386,10 +388,53 @@ function mi(imp,ir){
   if(ir)ir.textContent=msg;else document.getElementById('iM').textContent=msg;
   ld();uh();ua()
 }
+function pv(){
+  var t=document.getElementById('pA').value.trim();
+  if(!t){document.getElementById('iM').textContent='⚠️ 请粘贴数据';return}
+  var lines=t.split('\n').filter(function(l){return l.trim()});
+  var imp={};pt(t,{textContent:''});
+  // Re-run with preview
+  var testImp={};
+  var testLines=t.split('\n').filter(function(l){return l.trim()});
+  var pa=document.getElementById('previewArea');pa.style.display='block';
+  var h='<div class="cd" style="margin-top:4px"><div class="ct">📋 解析预览</div>';
+  var count=0;
+  for(var li=0;li<testLines.length&&li<20;li++){
+    var line=testLines[li].trim();
+    if(!line||line.match(/^[<日期Date]/))continue;
+    var parts=line.split(/[\s\t,;，；、|]+/);
+    if(parts.length<2)continue;
+    // Find date
+    var dateFound='',mealParts=[],stoolFound='';
+    for(var pi2=0;pi2<parts.length;pi2++){
+      var p2=parts[pi2].trim();
+      if(!p2)continue;
+      var dm2=p2.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+      if(dm2){dateFound=dm2[1]+'-'+Z(dm2[2])+'-'+Z(dm2[3]);continue;}
+      var sn=parseInt(p2);
+      if(sn>=1&&sn<=7&&!stoolFound){stoolFound=p2;continue;}
+      if(p2.match(/正常|溏|稀/)&&!stoolFound){stoolFound=p2;continue;}
+      mealParts.push(p2);
+    }
+    if(!dateFound)continue;
+    count++;
+    h+='<div style="font-size:10px;padding:3px 0;border-bottom:1px solid var(--bd);display:flex;gap:4px">';
+    h+='<span style="font-weight:600;color:var(--dg);min-width:70px">'+dateFound+'</span>';
+    h+='<span style="color:var(--pu)">🚽'+(stoolFound||'?')+'</span>';
+    h+='<span style="color:#333">'+mealParts.join(' | ').substring(0,40)+'</span></div>';
+  }
+  h+='<div style="font-size:10px;color:var(--gy);margin-top:4px">共 '+(testLines.length)+' 行，识别 '+count+' 条有效记录</div>';
+  if(count===0)h+='<div style="font-size:10px;color:var(--rd)">⚠️ 未识别到数据，请确认格式：每行以日期开头，用空格/Tab分隔</div>';
+  h+='<div style="font-size:10px;color:var(--gy);margin-top:2px">确认无误后点击「确认导入」</div></div>';
+  pa.innerHTML=h;
+  document.getElementById('iM').textContent='👁️ 预览已完成，请确认数据后导入'
+}
+
 function pi(){
   var t=document.getElementById('pA').value.trim();
   if(!t){document.getElementById('iM').textContent='⚠️ 请粘贴数据';return}
-  pt(t,document.getElementById('iM'));document.getElementById('pA').value=''
+  pt(t,document.getElementById('iM'));document.getElementById('pA').value='';
+  document.getElementById('previewArea').style.display='none'
 }
 
 // Tab
