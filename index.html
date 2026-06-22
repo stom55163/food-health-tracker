@@ -179,7 +179,38 @@ function pt(text,ir){
   var lines=text.split('\n').filter(function(l){return l.trim()}),imp={};
   if(ir)ir.textContent=''+lines.length+'行...';
   
-  // First try: single-line format (date + stool + meals per line)
+  // Step 1: Multi-line format (date line + meal lines on subsequent lines)
+  var curDate='',curStool='',mealLines=[];
+  for(var li2=0;li2<lines.length;li2++){
+    var line2=lines[li2].trim();
+    var dm3=line2.match(/(\d{1,2})[月\/](\d{1,2})日?/);
+    if(dm3){
+      if(curDate)parseMealLines(curDate,curStool,mealLines,imp);
+      curDate='2026-'+Z(dm3[1])+'-'+Z(dm3[2]);
+      curStool=line2.replace(dm3[0],'').replace(/[，,、：:\s]+/g,' ').trim()||'';
+      mealLines=[];
+    }else{
+      mealLines.push(line2);
+    }
+  }
+  if(curDate)parseMealLines(curDate,curStool,mealLines,imp);
+  // Convert Chinese stool to numeric
+  for(var dk2 in imp){
+    var st2=parseInt(imp[dk2].s.t);
+    if(!st2||st2===0){
+      var stoolText=imp[dk2].s.n;
+      if(stoolText){
+        var sn=parseInt(stoolText);
+        if(sn>=1&&sn<=7)imp[dk2].s.t=sn;
+        else if(stoolText.indexOf('正常')>=0)imp[dk2].s.t=4;
+        else if(stoolText.indexOf('溏')>=0||stoolText.indexOf('稀')>=0)imp[dk2].s.t=6;
+        else if(stoolText.indexOf('干')>=0||stoolText.indexOf('硬')>=0)imp[dk2].s.t=2;
+        else if(stoolText.indexOf('软')>=0)imp[dk2].s.t=5;
+      }
+    }
+  }
+  
+  // Step 2: Single-line fallback (for dates missed by multi-line)
   for(var li=0;li<lines.length;li++){
     var line=lines[li].trim();if(!line)continue;
     var parts=line.split(/[\s\t,;，；、|]+/);if(parts.length<2)continue;
@@ -190,58 +221,12 @@ function pt(text,ir){
       if(dm){dk=(dm[1]?dm[1]:'2026')+'-'+Z(dm[2].replace('月','').replace('日',''))+'-'+Z((dm[3]||'').replace('日',''));parts.splice(pi,1);break}
     }
     if(!dk)continue;
-    if(imp[dk])continue; // already processed in multi-line mode
+    if(imp[dk])continue;
     if(!imp[dk])imp[dk]={b:{f:''},l:{f:''},d:{f:''},s:{t:0,n:''}};
     var meals=[],s2='';
     for(var pj=0;pj<parts.length;pj++){var v=parts[pj].trim();if(!v)continue;var sn2=parseInt(v);if(sn2>=1&&sn2<=7&&!s2){s2=v;continue}if(v.match(/正常|溏|稀/)&&!s2){s2=v;continue}meals.push(v)}
     if(s2){var sn3=parseInt(s2);if(sn3>=1&&sn3<=7)imp[dk].s.t=sn3;else if(s2.indexOf('正常')>=0)imp[dk].s.t=4;else if(s2.indexOf('溏')>=0||s2.indexOf('稀')>=0)imp[dk].s.t=6}
     for(var mi2=0;mi2<Math.min(3,meals.length);mi2++){var mk=mi2===0?'b':mi2===1?'l':'d';imp[dk][mk].f=meals[mi2]}
-  }
-  
-  // If single-line found nothing, try multi-line format (date line + meal lines)
-  if(Object.keys(imp).length===0){
-    var curDate='',curStool='',mealLines=[];
-    for(var li2=0;li2<lines.length;li2++){
-      var line2=lines[li2].trim();
-      // Check if this is a date line
-      var dm3=line2.match(/(\d{1,2})[月\/](\d{1,2})日?/);
-      if(dm3){
-        // Save previous day's meals if any
-        if(curDate&&mealLines.length>0)parseMealLines(curDate,curStool,mealLines,imp);
-        curDate='2026-'+Z(dm3[1])+'-'+Z(dm3[2]);
-        // Check if stool info is on the same line (e.g. "6月3日，正常")
-        var afterDate=line2.replace(dm3[0],'').replace(/[，,、：:\s]+/g,' ').trim();
-        curStool=afterDate||'';
-        mealLines=[];
-      }else{
-        mealLines.push(line2);
-      }
-    }
-    // Process last day
-    if(curDate&&mealLines.length>0)parseMealLines(curDate,curStool,mealLines,imp);
-    // Also handle "拉肚子" lines
-    if(curDate&&imp[curDate]&&imp[curDate].s.t===0){
-      for(var mi3=0;mi3<mealLines.length;mi3++){
-        if(mealLines[mi3].indexOf('拉肚子')>=0||mealLines[mi3].indexOf('腹')>=0){
-          imp[curDate].s.t=6;imp[curDate].s.n=mealLines[mi3];
-        }
-      }
-    }
-    // Detect stool from curStool
-    for(var dk2 in imp){
-      var st2=parseInt(imp[dk2].s.t);
-      if(!st2||st2===0){
-        var stoolText=imp[dk2].s.n;
-        if(stoolText){
-          var sn4=parseInt(stoolText);
-          if(sn4>=1&&sn4<=7)imp[dk2].s.t=sn4;
-          else if(stoolText.indexOf('正常')>=0)imp[dk2].s.t=4;
-          else if(stoolText.indexOf('溏')>=0||stoolText.indexOf('稀')>=0)imp[dk2].s.t=6;
-          else if(stoolText.indexOf('干')>=0||stoolText.indexOf('硬')>=0)imp[dk2].s.t=2;
-          else if(stoolText.indexOf('软')>=0)imp[dk2].s.t=5;
-        }
-      }
-    }
   }
   mi(imp,ir)
 }
