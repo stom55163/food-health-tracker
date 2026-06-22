@@ -330,12 +330,12 @@ function si(ev){
 function re(f,ir){
   if(typeof XLSX==='undefined'){ir.textContent='⚠️ 需加载Excel库';return}
   var r=new FileReader();
-  r.onload=function(e){try{var wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});var rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});sm(rows,ir)}catch(err){ir.textContent='❌ '+err.message}};
+  r.onload=function(e){try{var wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});var rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});sm(rows,ir)}catch(err){ir.textContent='❌ '+err.message+'. 试试保存为CSV再导入';}};
   r.readAsArrayBuffer(f)
 }
 function rd(f,ir){
   var r=new FileReader();
-  r.onload=function(e){try{var d=new Uint8Array(e.target.result),txt='';for(var i=0;i<d.length;i+=10000)txt+=new TextDecoder('utf-8').decode(d.subarray(i,Math.min(i+10000,d.length)),{stream:true});var s=txt.indexOf('word/document.xml');if(s<0){ir.textContent='⚠️ 格式不支持';return}var x=txt.substring(txt.indexOf('<w:body',s),txt.indexOf('</w:body>',s));pt(x.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim(),ir)}catch(err){ir.textContent='❌ '+err.message}};
+  r.onload=function(e){try{var d=new Uint8Array(e.target.result),txt='';for(var i=0;i<d.length;i+=10000)txt+=new TextDecoder('utf-8').decode(d.subarray(i,Math.min(i+10000,d.length)),{stream:true});var s=txt.indexOf('word/document.xml');if(s<0){ir.textContent='⚠️ 格式不支持';return}var x=txt.substring(txt.indexOf('<w:body',s),txt.indexOf('</w:body>',s));pt(x.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim(),ir)}catch(err){ir.textContent='❌ '+err.message+'. 试试保存为CSV再导入';}};
   r.readAsArrayBuffer(f)
 }
 function sm(rows,ir){
@@ -353,7 +353,7 @@ function sm(rows,ir){
     var rw=rows[ri2];if(!rw||!rw[cm.d])continue;
     var dv=String(rw[cm.d]).trim(),dk='';
     if(typeof rw[cm.d]==='number'&&rw[cm.d]>40000){var dd=new Date((rw[cm.d]-25569)*86400*1000);dk=dd.getFullYear()+'-'+Z(dd.getMonth()+1)+'-'+Z(dd.getDate())}
-    else{var dm=dv.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);if(dm)dk=dm[1]+'-'+Z(dm[2])+'-'+Z(dm[3]);else{var dm2=dv.match(/(\d{1,2})[月\/](\d{1,2})日?/);if(dm2)dk='2026-'+Z(dm2[1])+'-'+Z(dm2[2])}}
+    else{if(dv.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/)){var dm=dv.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);dk=dm[1]+'-'+Z(dm[2])+'-'+Z(dm[3])}else if(dv.match(/(\d{1,2})[月\/](\d{1,2})日?/)){var dn=dv.match(/(\d{1,2})[月\/](\d{1,2})日?/);var y=new Date().getFullYear();dk=y+'-'+Z(dn[1])+'-'+Z(dn[2])}}
     if(!dk)continue;
     if(!imp[dk])imp[dk]={b:{f:'',p:null,t:''},l:{f:'',p:null,t:''},d:{f:'',p:null,t:''},s:{t:0,n:'',tm:''}};
     var sv=cm.s>=0?String(rw[cm.s]||'').trim():'',bv=cm.b>=0?String(rw[cm.b]||'').trim():'',lv=cm.l>=0?String(rw[cm.l]||'').trim():'',dv2=cm.di>=0?String(rw[cm.di]||'').trim():'',nv=cm.n>=0?String(rw[cm.n]||'').trim():'';
@@ -374,7 +374,7 @@ function pt(text,ir){
     }
     if(!dk)continue;if(!imp[dk])imp[dk]={b:{f:'',p:null,t:''},l:{f:'',p:null,t:''},d:{f:'',p:null,t:''},s:{t:0,n:'',tm:''}};
     var meals=[],s2='';
-    for(var pj=0;pj<parts.length;pj++){var v=parts[pj].trim();if(!v)continue;var sn2=parseInt(v);if(sn2>=1&&sn2<=7&&!s2){s2=v;continue}if(v.match(/正常|溏|稀/)&&!s2){s2=v;continue}meals.push(v)}
+    for(var pj=0;pj<parts.length;pj++){var v=parts[pj].trim();if(!v)continue;var sn2=parseInt(v);if(sn2>=1&&sn2<=7&&!s2){s2=v;continue}if(v.match(/正常|溏|稀|干|硬|软/)&&!s2){s2=v;continue}meals.push(v)}
     if(s2){var sn3=parseInt(s2);if(sn3>=1&&sn3<=7)imp[dk].s.t=sn3;else if(s2.indexOf('正常')>=0)imp[dk].s.t=4;else if(s2.indexOf('溏')>=0||s2.indexOf('稀')>=0)imp[dk].s.t=6}
     for(var mi2=0;mi2<Math.min(3,meals.length);mi2++){var mk=mi2===0?'b':mi2===1?'l':'d';imp[dk][mk].f=meals[mi2].replace(/[，,、]/g,' ')}
   }
