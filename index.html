@@ -102,7 +102,16 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
 </div>
 
 <!-- HISTORY -->
-<div class="pg" id="p1"><div id="hL"></div></div>
+<div class="pg" id="p1">
+  <div class="nv">
+    <button onclick="mvMonth(-1)">◀</button>
+    <div class="dt" id="monthLabel"></div>
+    <button onclick="mvMonth(1)">▶</button>
+  </div>
+  <div id="calGrid"></div>
+  <div id="dayDetail" style="margin-top:8px;display:none;"></div>
+  <div id="hL" style="display:none;"></div>
+</div>
 
 <!-- ANALYSIS -->
 <div class="pg" id="p2"><div id="aL"></div></div>
@@ -268,7 +277,7 @@ function sv(){
   if(st>0){day.s.t=st;day.s.n=document.getElementById('sN').value.trim();if(!day.s.tm)day.s.tm=N();}
   SD(data);
   alert('✅ '+F(cd)+' 已保存！');
-  loadD();upH();upA();
+  loadD();initCal();upA();
 }
 
 function mv(d){
@@ -466,7 +475,7 @@ function pI(){
   document.getElementById('pA').value='';
 }
 
-// Tab// Tab
+// Tab
 function sw(i){
   var ids=['p0','p1','p2','p3'];
   document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
@@ -479,7 +488,7 @@ function sw(i){
 // Modal
 document.body.insertAdjacentHTML('beforeend','<div class="mo" id="mo" onclick="cP()" style="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;display:none;justify-content:center;align-items:center;"><img class="mi" id="mi" style="max-width:90%;max-height:70%;border-radius:8px;"></div>');
 
-loadD();upH();upA();
+loadD();initCal();upA();
 </script>
 </body>
 </html>
