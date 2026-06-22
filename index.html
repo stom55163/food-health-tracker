@@ -332,10 +332,7 @@ function si(ev){
 function re(f,ir){
   if(!ir)return;
   if(typeof XLSX==='undefined'){
-    // Try reading as text instead
-    var r2=new FileReader();
-    r2.onload=function(e){pt(e.target.result,ir)};
-    r2.readAsText(f);
+    ir.textContent='⚠️ Excel库不可用。请先在Excel中另存为CSV格式，再导入CSV文件';
     return;
   }
   var r=new FileReader();
@@ -345,11 +342,7 @@ function re(f,ir){
       var rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
       sm(rows,ir)
     }catch(xlsErr){
-      // Excel parse failed - try reading as plain text
-      ir.textContent='⚠️ Excel解析出错，尝试按文本读取...';
-      var r3=new FileReader();
-      r3.onload=function(e2){pt(e2.target.result,ir)};
-      r3.readAsText(f);
+      ir.textContent='⚠️ 读Excel出错: '+xlsErr.message+'。请先在Excel中另存为CSV格式，再导入CSV文件';
     }
   };
   r.onerror=function(){
@@ -392,6 +385,7 @@ function pt(text,ir){
   var lines=text.split('\n').filter(function(l){return l.trim()}),imp={};
   if(ir)ir.textContent='共 '+lines.length+' 行，尝试智能识别...';
   
+  if(ir)ir.textContent='读入 '+lines.length+' 行，分析第一行: '+(lines[0]||'').substring(0,40)+'...';
   // Try smart column detection (like sm()) if there are headers
   var firstRow=lines[0].split(/[\t,;，；、|]+/).map(function(c){return String(c).trim().toLowerCase()});
   var hasHeaders=false;
