@@ -183,7 +183,7 @@ cd=T();
     h+='<div class="cd"><div class="ct">'+MN[m]+' <span class="bg" id="'+m+'B">未记录</span></div>';
     h+='<div class="fr"><textarea class="fi" id="'+m+'F" placeholder="吃什么了？拍照或手动输入" rows="1"></textarea>';
     h+='<label class="pb"><input type="file" accept="image/*" capture="environment" onchange="hP(this,\''+m+'\')"><span id="'+m+'I">📷</span></label></div>';
-    h+='<div class="hp-pp" id="'+m+'PP" style="display:none"><img id="'+m+'PI"><button class="ai-b" onclick="aiR(\''+m+'\')">🤖 识别</button></div>';
+    h+='<div class="hp-pp" id="'+m+'PP" style="display:none"><img id="'+m+'PI"><button class="ai-b" onclick="delP(\''+m+'\')">✕ 删除照片</button></div>';
     h+='<div class="ar" id="'+m+'AR"></div>';
     h+='<div class="st" id="'+m+'Tm"></div></div>';
   });
@@ -236,29 +236,16 @@ function hP(inp,m){
   r.readAsDataURL(f);inp.value='';
 }
 
-function aiR(m){
+function delP(m){
+  ph[m]=null;
+  document.getElementById(m+'I').textContent='📷';
+  document.getElementById(m+'PP').style.display='none';
+  document.getElementById(m+'F').value='';
+  var bg=document.getElementById(m+'B');
+  bg.textContent='未记录';bg.style.color='var(--gy)';
   var r=document.getElementById(m+'AR');
-  r.classList.add('on');
-  // Speech recognition to describe the food
-  if(!window.SpeechRecognition&&!window.webkitSpeechRecognition){
-    r.innerHTML='📷 看看照片里有什么，手动输入吧';
-    return;
-  }
-  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  var rec=new SR();rec.lang='zh-CN';rec.continuous=false;rec.interimResults=false;
-  r.innerHTML='🎤 请说出照片里的食物...';
-  rec.onresult=function(e){
-    var txt=e.results[0][0].transcript;
-    document.getElementById(m+'F').value=txt;
-    r.innerHTML='✅ 已识别：'+txt;
-    setTimeout(function(){r.classList.remove('on');},2000);
-  };
-  rec.onerror=function(){
-    r.innerHTML='📷 没听清，试试手动输入吧<br><button class="vb" onclick="aiR(\''+m+'\')">🎤 再试一次</button>';
-  };
-  rec.start();
+  if(r){r.classList.remove('on');r.innerHTML='';}
 }
-
 function pS(t){
   st=t;
   document.querySelectorAll('#sG .sb').forEach(function(b){b.classList.toggle('on',parseInt(b.dataset.t)===t);});
