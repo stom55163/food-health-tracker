@@ -121,7 +121,17 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
 <div class="mo" id="mo" onclick="this.style.display='none'"><img id="mi"></div>
 
 <script>
-var K='fd5',cd='',st=0,ph={};
+var K='fd4',cd='',st=0,ph={};
+// Migrate data from old keys
+try{
+  var oldKeys=['fd5','fd_v3','food_data_3'];
+  var cur=JSON.parse(localStorage.getItem(K))||{};
+  oldKeys.forEach(function(k){
+    if(k!==K){
+      try{var ok=JSON.parse(localStorage.getItem(k));if(ok&&Object.keys(ok).length>Object.keys(cur).length){cur=ok;localStorage.setItem(K,JSON.stringify(ok));localStorage.removeItem(k)}}catch(e){}
+    }
+  });
+}catch(e){}
 var SN={1:'1型硬球',2:'2型干硬',3:'3型有裂痕',4:'4型正常',5:'5型软边',6:'6型糊状',7:'7型水样'};
 var ML=['b','l','d'],MN={b:'🌅 早餐',l:'☀️ 午餐',d:'🌙 晚餐'};
 var cY=0,cM=0,sD='';
