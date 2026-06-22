@@ -174,11 +174,107 @@ function rx(f,ir){if(typeof XLSX!=='undefined'){var r=new FileReader();r.onload=
 function rd(f,ir){var r=new FileReader();r.onload=function(e){try{var d=new Uint8Array(e.target.result),txt='';for(var i=0;i<d.length;i+=10000)txt+=new TextDecoder().decode(d.subarray(i,Math.min(i+10000,d.length)),{stream:true});var s=txt.indexOf('word/document.xml');if(s<0){ir.textContent='Word格式不支持，请粘贴文本';return}var x=txt.substring(txt.indexOf('<w:body',s),txt.indexOf('</w:body>',s));pt(x.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim(),ir)}catch(e){ir.textContent='读Word出错，请粘贴文本'}};r.readAsArrayBuffer(f)}
 function sm(rows,ir){if(!rows||rows.length<2){pt(rows.join('\n'),ir);return}var hd=rows[0].map(function(h){return String(h).trim().toLowerCase()}),cm={d:-1,s:-1,b:-1,l:-1,di:-1};hd.forEach(function(h,i){if(/日期|date/.test(h))cm.d=i;else if(/大便|便|stool/.test(h))cm.s=i;else if(/早餐|早饭|breakfast|早/.test(h))cm.b=i;else if(/午餐|中饭|lunch|中餐/.test(h))cm.l=i;else if(/晚餐|晚饭|dinner|晚/.test(h))cm.di=i});if(cm.d<0)cm.d=0;var used={};used[cm.d]=1;if(cm.s<0){var c1=cm.d+1;while(used[c1])c1++;cm.s=c1;used[c1]=1}if(cm.b<0){var c2=cm.s+1;while(used[c2])c2++;cm.b=c2;used[c2]=1}if(cm.l<0){var c3=cm.b+1;while(used[c3])c3++;cm.l=c3;used[c3]=1}if(cm.di<0){var c4=cm.l+1;while(used[c4])c4++;cm.di=c4}var imp={};for(var ri=1;ri<rows.length;ri++){var rw=rows[ri];if(!rw||!rw[cm.d])continue;var dv=String(rw[cm.d]).trim(),dk='';if(typeof rw[cm.d]==='number'&&rw[cm.d]>40000){var dd=new Date((rw[cm.d]-25569)*86400*1000);dk=dd.getFullYear()+'-'+Z(dd.getMonth()+1)+'-'+Z(dd.getDate())}else{var dm=dv.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);if(dm)dk=dm[1]+'-'+Z(dm[2])+'-'+Z(dm[3]);else{var dm2=dv.match(/(\d{1,2})[月\/](\d{1,2})日?/);if(dm2)dk='2026-'+Z(dm2[1])+'-'+Z(dm2[2])}}if(!dk)continue;if(!imp[dk])imp[dk]={b:{f:''},l:{f:''},d:{f:''},s:{t:0,n:''}};var sv=cm.s>=0?String(rw[cm.s]||'').trim():'',bv=cm.b>=0?String(rw[cm.b]||'').trim():'',lv=cm.l>=0?String(rw[cm.l]||'').trim():'',dv2=cm.di>=0?String(rw[cm.di]||'').trim():'';if(bv&&bv!=='-')imp[dk].b.f=bv;if(lv&&lv!=='-')imp[dk].l.f=lv;if(dv2&&dv2!=='-')imp[dk].d.f=dv2;if(sv&&sv!=='-'){var sn=parseInt(sv);if(sn>=1&&sn<=7)imp[dk].s.t=sn;else if(sv.indexOf('正常')>=0)imp[dk].s.t=4;else if(sv.indexOf('溏')>=0||sv.indexOf('稀')>=0)imp[dk].s.t=6}}mi(imp,ir)}
 
-function pt(text,ir){var lines=text.split('\n').filter(function(l){return l.trim()}),imp={};if(ir)ir.textContent=''+lines.length+'行...';for(var li=0;li<lines.length;li++){var line=lines[li].trim();if(!line)continue;var parts=line.split(/[\s\t,;，；、|]+/);if(parts.length<2)continue;var dk='';for(var pi=0;pi<parts.length;pi++){var p=parts[pi].trim(),dm=p.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);if(!dm)dm=p.match(/(\d{1,2})[月\/](\d{1,2})日?/);if(dm){dk=(dm[1]?dm[1]:'2026')+'-'+Z(dm[2].replace('月','').replace('日',''))+'-'+Z((dm[3]||'').replace('日',''));parts.splice(pi,1);break}}if(!dk)continue;if(!imp[dk])imp[dk]={b:{f:''},l:{f:''},d:{f:''},s:{t:0,n:''}};var meals=[],s2='';for(var pj=0;pj<parts.length;pj++){var v=parts[pj].trim();if(!v)continue;var sn2=parseInt(v);if(sn2>=1&&sn2<=7&&!s2){s2=v;continue}if(v.match(/正常|溏|稀/)&&!s2){s2=v;continue}meals.push(v)}if(s2){var sn3=parseInt(s2);if(sn3>=1&&sn3<=7)imp[dk].s.t=sn3;else if(s2.indexOf('正常')>=0)imp[dk].s.t=4;else if(s2.indexOf('溏')>=0||s2.indexOf('稀')>=0)imp[dk].s.t=6}for(var mi2=0;mi2<Math.min(3,meals.length);mi2++){var mk=mi2===0?'b':mi2===1?'l':'d';imp[dk][mk].f=meals[mi2]}}mi(imp,ir)}
+function pt(text,ir){
+  var lines=text.split('\n').filter(function(l){return l.trim()}),imp={};
+  if(ir)ir.textContent=''+lines.length+'行...';
+  
+  // First try: single-line format (date + stool + meals per line)
+  for(var li=0;li<lines.length;li++){
+    var line=lines[li].trim();if(!line)continue;
+    var parts=line.split(/[\s\t,;，；、|]+/);if(parts.length<2)continue;
+    var dk='';
+    for(var pi=0;pi<parts.length;pi++){
+      var p=parts[pi].trim(),dm=p.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+      if(!dm)dm=p.match(/(\d{1,2})[月\/](\d{1,2})日?/);
+      if(dm){dk=(dm[1]?dm[1]:'2026')+'-'+Z(dm[2].replace('月','').replace('日',''))+'-'+Z((dm[3]||'').replace('日',''));parts.splice(pi,1);break}
+    }
+    if(!dk)continue;
+    if(imp[dk])continue; // already processed in multi-line mode
+    if(!imp[dk])imp[dk]={b:{f:''},l:{f:''},d:{f:''},s:{t:0,n:''}};
+    var meals=[],s2='';
+    for(var pj=0;pj<parts.length;pj++){var v=parts[pj].trim();if(!v)continue;var sn2=parseInt(v);if(sn2>=1&&sn2<=7&&!s2){s2=v;continue}if(v.match(/正常|溏|稀/)&&!s2){s2=v;continue}meals.push(v)}
+    if(s2){var sn3=parseInt(s2);if(sn3>=1&&sn3<=7)imp[dk].s.t=sn3;else if(s2.indexOf('正常')>=0)imp[dk].s.t=4;else if(s2.indexOf('溏')>=0||s2.indexOf('稀')>=0)imp[dk].s.t=6}
+    for(var mi2=0;mi2<Math.min(3,meals.length);mi2++){var mk=mi2===0?'b':mi2===1?'l':'d';imp[dk][mk].f=meals[mi2]}
+  }
+  
+  // If single-line found nothing, try multi-line format (date line + meal lines)
+  if(Object.keys(imp).length===0){
+    var curDate='',curStool='',mealLines=[];
+    for(var li2=0;li2<lines.length;li2++){
+      var line2=lines[li2].trim();
+      // Check if this is a date line
+      var dm3=line2.match(/(\d{1,2})[月\/](\d{1,2})日?/);
+      if(dm3){
+        // Save previous day's meals if any
+        if(curDate&&mealLines.length>0)parseMealLines(curDate,curStool,mealLines,imp);
+        curDate='2026-'+Z(dm3[1])+'-'+Z(dm3[2]);
+        // Check if stool info is on the same line (e.g. "6月3日，正常")
+        var afterDate=line2.replace(dm3[0],'').replace(/[，,、：:\s]+/g,' ').trim();
+        curStool=afterDate||'';
+        mealLines=[];
+      }else{
+        mealLines.push(line2);
+      }
+    }
+    // Process last day
+    if(curDate&&mealLines.length>0)parseMealLines(curDate,curStool,mealLines,imp);
+    // Also handle "拉肚子" lines
+    if(curDate&&imp[curDate]&&imp[curDate].s.t===0){
+      for(var mi3=0;mi3<mealLines.length;mi3++){
+        if(mealLines[mi3].indexOf('拉肚子')>=0||mealLines[mi3].indexOf('腹')>=0){
+          imp[curDate].s.t=6;imp[curDate].s.n=mealLines[mi3];
+        }
+      }
+    }
+    // Detect stool from curStool
+    for(var dk2 in imp){
+      var st2=parseInt(imp[dk2].s.t);
+      if(!st2||st2===0){
+        var stoolText=imp[dk2].s.n;
+        if(stoolText){
+          var sn4=parseInt(stoolText);
+          if(sn4>=1&&sn4<=7)imp[dk2].s.t=sn4;
+          else if(stoolText.indexOf('正常')>=0)imp[dk2].s.t=4;
+          else if(stoolText.indexOf('溏')>=0||stoolText.indexOf('稀')>=0)imp[dk2].s.t=6;
+          else if(stoolText.indexOf('干')>=0||stoolText.indexOf('硬')>=0)imp[dk2].s.t=2;
+          else if(stoolText.indexOf('软')>=0)imp[dk2].s.t=5;
+        }
+      }
+    }
+  }
+  mi(imp,ir)
+}
+
+function parseMealLines(date,stool,lines,imp){
+  if(!imp[date])imp[date]={b:{f:''},l:{f:''},d:{f:''},s:{t:0,n:''}};
+  imp[date].s.n=stool||'';
+  for(var i=0;i<lines.length;i++){
+    var l=lines[i].trim();
+    // Remove meal labels (早饭: / 早饭： / 早饭， / 中饭: / etc.)
+    var food=l.replace(/^(早饭|早餐|中饭|午餐|晚饭|晚餐)[:：，,、]?/,'').trim();
+    var label=l.match(/^(早饭|早餐|中饭|午餐|晚饭|晚餐)/);
+    // Clean up food items - replace Chinese commas with spaces
+    food=food.replace(/[，,、]/g,' ');
+    if(label){
+      var lb=label[1];
+      if(lb.indexOf('早')>=0){imp[date].b.f=food;}
+      else if(lb.indexOf('中')>=0){imp[date].l.f=food;}
+      else if(lb.indexOf('晚')>=0){imp[date].d.f=food;}
+    }else{
+      // No label - could be a note or extra food line
+      if(l.indexOf('拉肚子')>=0||l.indexOf('稀')>=0||l.indexOf('溏')>=0){
+        imp[date].s.n=((imp[date].s.n||'')+' '+l).trim();
+        imp[date].s.t=6;
+      }else if(food&&!imp[date].d.f){
+        imp[date].d.f=food;
+      }
+    }
+  }
+}
 
 function mi(imp,ir){var k2=Object.keys(imp);if(k2.length===0){var m='❌ 未识别到数据，格式：2026/06/21 4 馒头 鸡蛋 米饭 面条';if(ir)ir.textContent=m;else document.getElementById('iM').textContent=m;return}var ex=L();k2.forEach(function(k){ex[k]=imp[k]});S(ex);var msg='✅ 导入 '+k2.length+' 天';if(ir)ir.textContent=msg;ld();uh();ua()}
 
-function pv(){var t=document.getElementById('tI').value.trim();if(!t){document.getElementById('iM').textContent='先粘贴数据';return}document.getElementById('iM').textContent='预览中...';var lines=t.split('\n').filter(function(l){return l.trim()}),pa=document.getElementById('pV');pa.style.display='block';var h='<div class="cd"><div class="ct">📋 预览</div>';var count=0;for(var li=0;li<lines.length&&li<15;li++){var line=lines[li].trim(),parts=line.split(/[\s\t,;，；、|]+/),dateFound='',mealParts=[],stoolFound='';for(var pi=0;pi<parts.length;pi++){var p=parts[pi].trim();if(!p)continue;var dm=p.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);if(dm){dateFound=dm[1]+'-'+Z(dm[2])+'-'+Z(dm[3]);continue}var dm2=p.match(/(\d{1,2})[月\/](\d{1,2})日?/);if(dm2){dateFound='2026'+'-'+Z(dm2[1])+'-'+Z(dm2[2]);continue}var sn=parseInt(p);if(sn>=1&&sn<=7&&!stoolFound){stoolFound=p;continue}if(p.match(/正常|溏|稀/)&&!stoolFound){stoolFound=p;continue}mealParts.push(p)}if(!dateFound)continue;count++;h+='<div style="font-size:10px;padding:2px 0;display:flex;gap:4px;border-bottom:1px solid #e5e7eb"><span style="font-weight:600;min-width:70px;color:#047857">'+dateFound+'</span><span style="color:#8b5cf6">🚽'+(stoolFound||'?')+'</span><span>'+mealParts.join(' ').substring(0,30)+'</span></div>'}h+='<div style="font-size:10px;color:#6b7280;margin-top:4px">'+lines.length+'行, 识别 '+count+'条</div>';if(count===0)h+='<div style="font-size:10px;color:#ef4444">⚠️ 未识别到日期</div>';h+='</div>';pa.innerHTML=h;document.getElementById('iM').textContent=count>0?'✅ 预览完成，点"导入"确认':count+' 条有效'}
+function pv(){var t=document.getElementById('tI').value.trim();if(!t){document.getElementById('iM').textContent='先粘贴数据';return}document.getElementById('iM').textContent='预览中...';var lines=t.split('\n').filter(function(l){return l.trim()}),pa=document.getElementById('pV');pa.style.display='block';var h='<div class="cd"><div class="ct">📋 预览</div>';var count=0;for(var li=0;li<lines.length&&li<15;li++){var line=lines[li].trim(),parts=line.split(/[\s\t,;，；、|]+/),dateFound='',mealParts=[],stoolFound='';for(var pi=0;pi<parts.length;pi++){var p=parts[pi].trim();if(!p)continue;var dm=p.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);if(dm){dateFound=dm[1]+'-'+Z(dm[2])+'-'+Z(dm[3]);continue}var dm2=p.match(/(\d{1,2})[月\/](\d{1,2})日?/);if(dm2){dateFound='2026'+'-'+Z(dm2[1])+'-'+Z(dm2[2]);continue}var sn=parseInt(p);if(sn>=1&&sn<=7&&!stoolFound){stoolFound=p;continue}if(p.match(/正常|溏|稀/)&&!stoolFound){stoolFound=p;continue}mealParts.push(p)}if(!dateFound)continue;count++;h+='<div style="font-size:10px;padding:2px 0;display:flex;gap:4px;border-bottom:1px solid #e5e7eb"><span style="font-weight:600;min-width:70px;color:#047857">'+dateFound+'</span><span style="color:#8b5cf6">🚽'+(stoolFound||'?')+'</span><span>'+mealParts.join(' ').substring(0,30)+'</span></div>'}h+='<div style="font-size:10px;color:#6b7280;margin-top:4px">'+lines.length+'行, 识别 '+count+'条</div>';if(count===0){h+='<div style="font-size:10px;color:#ef4444">⚠️ 未识别到日期</div>';h+='<div style="font-size:10px;color:#6b7280">检测到多行格式，将按日期+三餐分组导入</div>'}h+='</div>';pa.innerHTML=h;document.getElementById('iM').textContent=count>0?'✅ 预览完成，点"导入"确认':count+' 条有效（已检测为多行格式）'}
 function pi(){var t=document.getElementById('tI').value.trim();if(!t){document.getElementById('iM').textContent='先粘贴数据';return}pt(t,document.getElementById('iM'));document.getElementById('tI').value='';document.getElementById('pV').style.display='none'}
 
 function ej(){var d=L();document.getElementById('tA').value=JSON.stringify(d,null,2);var b=new Blob(['\uFEFF'+JSON.stringify(d,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='饮食助手_'+T()+'.json';a.click()}
