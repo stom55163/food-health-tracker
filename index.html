@@ -320,7 +320,9 @@ function cl(){
 // Smart import
 function si(ev){
   var f=ev.target.files[0];if(!f)return;
-  var ir=document.getElementById('iM');ir.textContent='⏳ 解析中...';
+  var ir=document.getElementById('iM');
+  if(!ir){alert('页面错误：找不到消息区域');return}
+  ir.textContent='⏳ 解析中...';
   var nm=f.name.toLowerCase();
   if(nm.endsWith('.xlsx')||nm.endsWith('.xls')){re(f,ir)}
   else if(nm.endsWith('.docx')){rd(f,ir)}
@@ -328,9 +330,33 @@ function si(ev){
   ev.target.value=''
 }
 function re(f,ir){
-  if(typeof XLSX==='undefined'){ir.textContent='⚠️ 需加载Excel库';return}
+  if(!ir)return;
+  if(typeof XLSX==='undefined'){
+    // Try reading as text instead
+    var r2=new FileReader();
+    r2.onload=function(e){pt(e.target.result,ir)};
+    r2.readAsText(f);
+    return;
+  }
   var r=new FileReader();
-  r.onload=function(e){try{var wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});var rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});sm(rows,ir)}catch(err){ir.textContent='❌ '+err.message+'. 试试保存为CSV再导入';}};
+  r.onload=function(e){
+    try{
+      var wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+      var rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
+      sm(rows,ir)
+    }catch(xlsErr){
+      // Excel parse failed - try reading as plain text
+      ir.textContent='⚠️ Excel解析出错，尝试按文本读取...';
+      var r3=new FileReader();
+      r3.onload=function(e2){pt(e2.target.result,ir)};
+      r3.readAsText(f);
+    }
+  };
+  r.onerror=function(){
+    var r3=new FileReader();
+    r3.onload=function(e2){pt(e2.target.result,ir)};
+    r3.readAsText(f);
+  };
   r.readAsArrayBuffer(f)
 }
 function rd(f,ir){
