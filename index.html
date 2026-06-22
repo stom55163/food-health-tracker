@@ -285,33 +285,91 @@ function mv(d){
   cd=dt.getFullYear()+'-'+Z(dt.getMonth()+1)+'-'+Z(dt.getDate());loadD();
 }
 
-// History
-function upH(){
-  var data=LD(), dates=Object.keys(data).sort().reverse();
-  var c=document.getElementById('hL');
-  if(dates.length===0){c.innerHTML='<div class="em">📭 还没有记录</div>';return;}
-  var h='';
-  dates.forEach(function(d){
-    var day=data[d];
-    if(!day.b.f&&!day.l.f&&!day.d.f&&!day.s.t)return;
-    h+='<div class="dc"><div class="dh" onclick="tD(this)">';
-    h+='<span>📅 '+F(d)+'</span>';
-    var s='';if(day.s.t)s+='🚽'+day.s.t+'型';if(day.b.f||day.l.f||day.d.f)s+=' 🍽️';
-    h+='<span class="sm">'+s+'</span></div><div class="db">';
-    if(day.s.t>0){h+='<div class="hs"><span style="color:var(--pu)">🚽</span><span>'+SN[day.s.t]+'</span>';if(day.s.n)h+='<span style="color:var(--gy)"> — '+day.s.n+'</span>';h+='</div>';}
-    var LB={b:'🌅早',l:'☀️午',d:'🌙晚'};
-    ['b','l','d'].forEach(function(k){
-      if(day[k].f||day[k].p){
-        h+='<div class="hm"><span class="hl">'+LB[k]+'</span><span>'+(day[k].f||'')+'</span>';
-        if(day[k].p)h+='<img class="hp" src="'+day[k].p+'" onclick="vP(\''+day[k].p+'\')">';
-        h+='</div>';
-      }
-    });
-    h+='</div></div>';
-  });
-  c.innerHTML=h||'<div class="em">📭 还没有记录</div>';
+// Calendar history
+var calYear=0,calMonth=0,selDay='';
+
+function initCal(){
+  var d=new Date();
+  calYear=d.getFullYear();
+  calMonth=d.getMonth();
+  upH();
 }
-function tD(el){el.nextElementSibling.classList.toggle('on');}
+
+function mvMonth(dir){
+  calMonth+=dir;
+  if(calMonth>11){calMonth=0;calYear++;}
+  if(calMonth<0){calMonth=11;calYear--;}
+  upH();
+}
+
+function upH(){
+  var data=LD();
+  document.getElementById('monthLabel').textContent=calYear+'年'+(calMonth+1)+'月';
+  var firstDay=new Date(calYear,calMonth,1).getDay();
+  var lastDate=new Date(calYear,calMonth+1,0).getDate();
+  var prevLast=new Date(calYear,calMonth,0).getDate();
+  var days=['日','一','二','三','四','五','六'];
+  var h='<div class="cal">';
+  days.forEach(function(d){h+='<div class="cal-hd">'+d+'</div>';});
+  var today=T();
+  for(var i=firstDay-1;i>=0;i--){
+    var cd=calYear+'-'+Z(calMonth)+'-'+Z(prevLast-i);
+    h+='<div class="cal-d other" onclick="pickDay(\''+cd+'\')"><span class="num">'+(prevLast-i)+'</span></div>';
+  }
+  for(var d2=1;d2<=lastDate;d2++){
+    var cd2=calYear+'-'+Z(calMonth+1)+'-'+Z(d2);
+    var cls=(cd2===today?'today ':'')+(cd2===selDay?'sel ':'');
+    var dayData=data[cd2];
+    var dot='';
+    if(dayData){
+      var st=dayData.s&&dayData.s.t?dayData.s.t:0;
+      if(st===0&&(dayData.b.f||dayData.l.f||dayData.d.f))dot='<span class="dot p"></span>';
+      else if(st>=1&&st<=3)dot='<span class="dot y"></span>';
+      else if(st===4)dot='<span class="dot g"></span>';
+      else if(st>=5)dot='<span class="dot r"></span>';
+    }
+    h+='<div class="cal-d '+cls+'" onclick="pickDay(\''+cd2+'\')"><span class="num">'+d2+'</span>'+dot+'</div>';
+  }
+  var remaining=42-(firstDay+lastDate);
+  for(var j=1;j<=remaining;j++){
+    var nY=calMonth+2>11?calYear+1:calYear;
+    var nM=calMonth+2>11?1:calMonth+2;
+    var cd3=nY+'-'+Z(nM)+'-'+Z(j);
+    h+='<div class="cal-d other" onclick="pickDay(\''+cd3+'\')"><span class="num">'+j+'</span></div>';
+  }
+  h+='</div>';
+  document.getElementById('calGrid').innerHTML=h;
+  if(selDay&&data[selDay])showDayDetail(selDay,data[selDay]);
+}
+
+function showDayDetail(dk,day){
+  var c=document.getElementById('dayDetail');
+  c.style.display='block';
+  if(!day||(!day.b.f&&!day.l.f&&!day.d.f&&!day.s.t)){
+    c.innerHTML='<div class="em" style="padding:12px;">📭 当天没有记录</div>';
+    return;
+  }
+  var h='<div class="cd dt-card"><div class="ct">📅 '+F(dk)+'</div>';
+  if(day.s.t>0){
+    h+='<div class="hs" style="padding:4px 0;display:flex;gap:5px;align-items:center;border-bottom:1px solid var(--bd);font-size:12px;">';
+    h+='<span style="color:var(--pu)">🚽</span><span>'+SN[day.s.t]+'</span>';
+    if(day.s.n)h+='<span style="color:var(--gy)"> — '+day.s.n+'</span>';
+    h+='</div>';
+  }
+  var LB={b:'🌅 早餐',l:'☀️ 午餐',d:'🌙 晚餐'};
+  ['b','l','d'].forEach(function(k){
+    if(day[k].f||day[k].p){
+      h+='<div class="hm" style="padding:5px 0;display:flex;gap:6px;align-items:flex-start;border-bottom:1px solid var(--bd);font-size:12px;">';
+      h+='<span style="color:var(--dg);font-weight:600;min-width:40px;flex-shrink:0;">'+LB[k]+'</span>';
+      h+='<span>'+(day[k].f||'')+'</span>';
+      if(day[k].p)h+='<img class="hp" src="'+day[k].p+'" onclick="vP(\''+day[k].p+'\')" style="width:40px;height:40px;border-radius:6px;object-fit:cover;cursor:pointer;margin-left:auto;">';
+      h+='</div>';
+    }
+  });
+  h+='</div>';
+  c.innerHTML=h;
+}
+
 function vP(s){if(!s)return;var m=document.getElementById('mo');document.getElementById('mi').src=s;m.style.display='flex';}
 function cP(){document.getElementById('mo').style.display='none';}
 
