@@ -2,115 +2,103 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>🥗 饮食助手</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-:root{--gr:#059669;--lg:#d1fae5;--dg:#047857;--gy:#6b7280;--lgy:#f3f4f6;--bd:#e5e7eb;--rd:#ef4444;--yl:#f59e0b;--pu:#8b5cf6;}
-body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f0fdf4;padding-bottom:56px;max-width:480px;margin:0 auto;min-height:100vh;color:#333;}
-.hd{background:linear-gradient(135deg,#059669,#34d399);padding:14px 16px;color:#fff;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20;}
-.hd-l{display:flex;align-items:center;gap:8px;}
-.hd-l .i{font-size:24px;}.hd-l .t{font-size:15px;font-weight:600;}.hd-l .s{font-size:10px;opacity:.8;}
-.pg{display:none;padding:10px 12px;padding-bottom:60px;}
-.pg.on{display:block;}
-.cd{background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.05);border:1px solid var(--bd);}
-.ct{font-size:13px;font-weight:600;color:var(--dg);margin-bottom:6px;display:flex;align-items:center;gap:5px;}
-.ct .bg{font-size:10px;background:var(--lg);color:var(--dg);padding:1px 8px;border-radius:10px;font-weight:400;margin-left:auto;}
-.sg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:5px 0;}
-.sb{text-align:center;padding:6px 2px;border-radius:8px;cursor:pointer;border:2px solid var(--bd);background:#fff;font-size:9px;color:var(--gy);transition:all .1s;}
-.sb .e{font-size:18px;display:block;margin-bottom:1px;}
-.sb.on{border-color:var(--gr);background:var(--lg);color:var(--dg);font-weight:600;}
-.sn{width:100%;border:1px solid var(--bd);border-radius:8px;padding:7px 10px;font-size:12px;margin-top:4px;font-family:inherit;outline:none;resize:none;}
-.sn:focus{border-color:var(--gr);}
-.st{font-size:10px;color:var(--gy);margin-top:3px;}
-.fr{display:flex;gap:6px;align-items:flex-start;}
-.fi{flex:1;border:1px solid var(--bd);border-radius:8px;padding:8px 10px;font-size:13px;min-height:36px;font-family:inherit;outline:none;resize:none;}
-.fi:focus{border-color:var(--gr);}
-.pb{width:44px;height:44px;border-radius:10px;border:2px dashed var(--bd);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:var(--gy);flex-shrink:0;background:#fff;position:relative;overflow:hidden;}
-.pb input{position:absolute;inset:0;opacity:0;cursor:pointer;}
-.pb img{width:40px;height:40px;border-radius:8px;object-fit:cover;}
-.hp-pp{position:relative;margin-top:4px;border-radius:8px;overflow:hidden;}
-.hp-pp img{width:100%;border-radius:8px;max-height:160px;object-fit:cover;display:block;}
-.ai-b{position:absolute;bottom:6px;right:6px;background:rgba(5,150,105,.9);color:#fff;border:none;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;backdrop-filter:blur(4px);}
-.ai-b:active{opacity:.8;}
-.vb{background:var(--lgy);border:1px solid var(--bd);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;color:var(--gy);}
-.sv{display:block;width:100%;background:linear-gradient(135deg,#059669,#34d399);border:none;color:#fff;padding:12px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;margin:10px 0 5px;letter-spacing:1px;}
-.sv:active{opacity:.9;transform:scale(.98);}
-.tb{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--bd);display:flex;max-width:480px;margin:0 auto;z-index:20;padding-bottom:env(safe-area-inset-bottom);}
-.tn{flex:1;text-align:center;padding:5px 0 7px;cursor:pointer;color:var(--gy);font-size:9px;}
-.tn .i{font-size:20px;display:block;margin-bottom:2px;}
-.tn.on{color:var(--gr);}
-.nv{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
-.nv button{background:var(--lgy);border:none;width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.nv .dt{font-size:13px;font-weight:600;color:var(--gy);}
-.dc{margin-bottom:8px;}
-.dh{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--lgy);border-radius:8px 8px 0 0;cursor:pointer;font-size:12px;font-weight:600;color:var(--dg);}
-.dh .sm{font-size:10px;color:var(--gy);font-weight:400;}
-.db{padding:8px 12px;border:1px solid var(--bd);border-top:none;border-radius:0 0 8px 8px;display:none;font-size:11px;}
-.db.on{display:block;}
-.hs,.hm{padding:4px 0;border-bottom:1px solid var(--bd);display:flex;gap:5px;align-items:flex-start;}
-.hm:last-child,.hs:last-child{border:none;}
-.hl{color:var(--dg);font-weight:600;min-width:30px;flex-shrink:0;}
-.hp{width:36px;height:36px;border-radius:4px;object-fit:cover;cursor:pointer;}
-.ax{margin-bottom:10px;}
-.at{font-size:13px;font-weight:600;color:var(--dg);margin-bottom:4px;}
-.ac{background:#fff;border-radius:8px;padding:8px 10px;border:1px solid var(--bd);margin-bottom:4px;}
-.ai2{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--bd);font-size:11px;}
-.ai2:last-child{border:none;}
-.em{text-align:center;padding:30px;color:var(--gy);font-size:12px;}
-.ir{font-size:11px;color:var(--gy);margin-top:4px;}
-.ar{display:none;font-size:11px;color:var(--dg);margin-top:4px;padding:6px 8px;background:var(--lg);border-radius:6px;}
-.ar.on{display:block;}
-.tx{width:100%;min-height:60px;font-size:11px;padding:6px;border:1px solid var(--bd);border-radius:6px;font-family:monospace;resize:vertical;}
-.bb{display:flex;gap:5px;margin:5px 0;flex-wrap:wrap;}
-.bb button{padding:8px 10px;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;color:#fff;}
-.bb button:active{opacity:.8;}
-.bg2{background:var(--gr);}.bb2{background:#2563eb;}.bb3{background:var(--pu);}.bb4{background:var(--rd);}.bb5{background:var(--yl);}
-.stl{font-size:10px;color:var(--gy);line-height:1.5;margin-bottom:3px;}
-.qr-area{text-align:center;padding:20px;}
-.qr-area img{max-width:200px;}
-.qr-area .t{font-size:11px;color:var(--gy);margin-top:8px;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--gr:#059669;--lg:#d1fae5;--dg:#047857;--gy:#6b7280;--lgy:#f3f4f6;--bd:#e5e7eb;--rd:#ef4444;--yl:#f59e0b;--pu:#8b5cf6}
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;background:#f0fdf4;padding-bottom:54px;max-width:480px;margin:0 auto;min-height:100vh;color:#333}
+.hd{background:linear-gradient(135deg,#059669,#34d399);padding:12px 16px;color:#fff;display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:20}
+.hd .lg{font-size:22px}.hd .t{font-size:14px;font-weight:600}.hd .s{font-size:10px;opacity:.8}
+.pg{display:none;padding:10px 12px;padding-bottom:50px}.pg.on{display:block}
+.cd{background:#fff;border-radius:10px;padding:10px 12px;margin-bottom:8px;border:1px solid var(--bd)}
+.ct{font-size:13px;font-weight:600;color:var(--dg);margin-bottom:4px;display:flex;align-items:center;gap:4px}
+.ct .bg{font-size:10px;background:var(--lg);color:var(--dg);padding:1px 6px;border-radius:8px;font-weight:400;margin-left:auto}
+.sg{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin:4px 0}
+.sb{text-align:center;padding:5px 1px;border-radius:6px;cursor:pointer;border:2px solid var(--bd);background:#fff;font-size:9px;color:var(--gy);transition:.1s}
+.sb .e{font-size:17px;display:block}
+.sb.on{border-color:var(--gr);background:var(--lg);color:var(--dg);font-weight:600}
+.sn{width:100%;border:1px solid var(--bd);border-radius:6px;padding:6px 8px;font-size:12px;margin-top:3px;font-family:inherit;outline:none;resize:none}
+.sn:focus{border-color:var(--gr)}.st{font-size:10px;color:var(--gy);margin-top:2px}
+.fr{display:flex;gap:5px;align-items:flex-start}
+.fi{flex:1;border:1px solid var(--bd);border-radius:6px;padding:7px 8px;font-size:13px;min-height:36px;font-family:inherit;outline:none;resize:none}
+.fi:focus{border-color:var(--gr)}
+.pb{width:42px;height:42px;border-radius:8px;border:2px dashed var(--bd);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--gy);flex-shrink:0;background:#fff;position:relative;overflow:hidden}
+.pb input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.pb img{width:38px;height:38px;border-radius:6px;object-fit:cover}
+.pp{position:relative;margin-top:3px;border-radius:6px;overflow:hidden}
+.pp img{width:100%;border-radius:6px;max-height:140px;object-fit:cover;display:block}
+.del-b{position:absolute;top:4px;right:4px;background:rgba(239,68,68,.85);color:#fff;border:none;padding:3px 8px;border-radius:4px;font-size:10px;cursor:pointer}
+.del-b:active{opacity:.8}
+.sv{display:block;width:100%;background:linear-gradient(135deg,#059669,#34d399);border:none;color:#fff;padding:11px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;margin:8px 0 4px;letter-spacing:1px}
+.sv:active{opacity:.9}
+.tb{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--bd);display:flex;max-width:480px;margin:0 auto;z-index:20;padding-bottom:env(safe-area-inset-bottom)}
+.tn{flex:1;text-align:center;padding:4px 0 6px;cursor:pointer;color:var(--gy);font-size:9px}
+.tn .i{font-size:18px;display:block}.tn.on{color:var(--gr)}
+.nv{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.nv button{background:var(--lgy);border:none;width:28px;height:28px;border-radius:50%;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.nv .dt{font-size:12px;font-weight:600;color:var(--gy)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;background:#fff;border-radius:8px;padding:6px;border:1px solid var(--bd)}
+.cal-hd{text-align:center;font-size:9px;color:var(--gy);padding:3px 0;font-weight:600}
+.cal-d{text-align:center;padding:5px 0;border-radius:6px;cursor:pointer;font-size:12px;color:#333;position:relative;min-height:32px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.cal-d:hover{background:var(--lgy)}
+.cal-d.other{color:#ccc}
+.cal-d.today{border:2px solid var(--gr);font-weight:bold}
+.cal-d .dot{width:5px;height:5px;border-radius:50%;margin-top:1px;display:inline-block}
+.cal-d .dot.g{background:var(--gr)}.cal-d .dot.r{background:var(--rd)}.cal-d .dot.y{background:var(--yl)}.cal-d .dot.p{background:var(--pu)}
+.cal-d.sel{background:var(--lg)}.cal-d.sel .num{font-weight:bold;color:var(--dg)}
+.em{text-align:center;padding:24px;color:var(--gy);font-size:12px}
+.ir{font-size:10px;color:var(--gy);margin-top:3px}
+.tx{width:100%;min-height:50px;font-size:11px;padding:5px;border:1px solid var(--bd);border-radius:5px;font-family:monospace;resize:vertical}
+.bb{display:flex;gap:4px;margin:4px 0;flex-wrap:wrap}
+.bb button{padding:7px 9px;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;color:#fff}
+.bb button:active{opacity:.8}
+.bg2{background:var(--gr)}.bu2{background:#2563eb}.bv{background:var(--pu)}.br{background:var(--rd)}.by{background:var(--yl)}
+.stl{font-size:10px;color:var(--gy);line-height:1.5;margin-bottom:2px}
+.ai2{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--bd);font-size:11px}
+.ai2:last-child{border:none}
+.ac{background:#fff;border-radius:6px;padding:6px 8px;border:1px solid var(--bd);margin-bottom:3px}
+.at{font-size:12px;font-weight:600;color:var(--dg);margin-bottom:3px}
+.dc{margin-bottom:6px}.hm{padding:4px 0;border-bottom:1px solid var(--bd);display:flex;gap:5px;align-items:flex-start;font-size:11px}
+.hm:last-child{border:none}.hl{color:var(--dg);font-weight:600;min-width:34px;flex-shrink:0}
+.hp{width:34px;height:34px;border-radius:4px;object-fit:cover;cursor:pointer}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;display:none;justify-content:center;align-items:center}
+.mo img{max-width:90%;max-height:70%;border-radius:6px} .mc{position:fixed;top:12px;right:12px;color:#fff;font-size:20px;cursor:pointer}
 </style>
-<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
-<div class="hd">
-  <div class="hd-l"><span class="i">🥗</span><div><div class="t">饮食助手</div><div class="s">三餐+大便跟踪分析</div></div></div>
-</div>
+<div class="hd"><span class="lg">🥗</span><div><div class="t">饮食助手</div><div class="s">三餐+大便跟踪分析</div></div></div>
 
 <!-- TODAY -->
 <div class="pg on" id="p0">
   <div class="nv">
     <button onclick="mv(-1)">◀</button>
-    <div class="dt" id="dL">📅 加载中</div>
+    <div class="dt" id="dL"></div>
     <button onclick="mv(1)">▶</button>
   </div>
-  <div style="text-align:center;font-size:10px;color:var(--gy);margin-bottom:4px;" id="dH"></div>
 
-  <div class="cd" style="border-left:3px solid var(--pu);">
-    <div class="ct">🚽 大便状态 <span class="bg" id="sBadge">请选择</span></div>
+  <div class="cd" style="border-left:3px solid var(--pu)">
+    <div class="ct">🚽 大便 <span class="bg" id="sB">请选择</span></div>
     <div class="sg" id="sG"></div>
-    <textarea class="sn" id="sN" placeholder="备注：颜色、量、腹部感觉等" rows="1"></textarea>
-    <div class="st" id="sTm"></div>
+    <textarea class="sn" id="sN" placeholder="备注：颜色、量、感觉" rows="1"></textarea>
+    <div class="st" id="sT"></div>
   </div>
 
   <div id="mL"></div>
 
-  <button class="sv" onclick="sv()">💾 保存今日记录</button>
-  <div style="font-size:10px;color:var(--gy);text-align:center;margin-top:3px;">用 ◀ ▶ 切换日期查看和修改</div>
+  <button class="sv" onclick="sv()">💾 保存</button>
 </div>
 
 <!-- HISTORY -->
 <div class="pg" id="p1">
   <div class="nv">
-    <button onclick="mvMonth(-1)">◀</button>
-    <div class="dt" id="monthLabel"></div>
-    <button onclick="mvMonth(1)">▶</button>
+    <button onclick="mm(-1)">◀</button>
+    <div class="dt" id="mLb"></div>
+    <button onclick="mm(1)">▶</button>
   </div>
-  <div id="calGrid"></div>
-  <div id="dayDetail" style="margin-top:8px;display:none;"></div>
-  <div id="hL" style="display:none;"></div>
+  <div id="cG"></div>
+  <div id="dD" style="display:none;margin-top:6px"></div>
 </div>
 
 <!-- ANALYSIS -->
@@ -119,25 +107,25 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
 <!-- DATA -->
 <div class="pg" id="p3">
   <div class="cd">
-    <div class="ct">📂 智能导入（Excel/Word/CSV）</div>
-    <div class="stl">自动分析列内容，支持 .xlsx .xls .doc .docx .csv .txt。上传后自动识别，无需固定模板。</div>
+    <div class="ct">📂 智能导入</div>
+    <div class="stl">支持 .xlsx .xls .doc .docx .csv .txt，自动识别列对应关系</div>
     <div class="bb">
-      <button class="bg2" onclick="document.getElementById('fX').click()">📥 选择文件导入</button>
-      <button class="bb3" onclick="pI()">📝 粘贴数据</button>
+      <button class="bg2" onclick="document.getElementById('fX').click()">📥 选择文件</button>
+      <button class="bv" onclick="pi()">📝 粘贴数据</button>
     </div>
-    <input type="file" id="fX" accept=".xlsx,.xls,.doc,.docx,.csv,.txt,.html" style="display:none" onchange="smartImport(event)">
-    <textarea class="tx" id="pA" style="height:50px;" placeholder="粘贴数据或选择文件后自动解析..."></textarea>
-    <div class="ir" id="irM">支持任意格式，自动识别列对应关系</div>
+    <input type="file" id="fX" accept=".xlsx,.xls,.doc,.docx,.csv,.txt" style="display:none" onchange="si(event)">
+    <textarea class="tx" id="pA" placeholder="或粘贴数据到此处"></textarea>
+    <div class="ir" id="iM"></div>
   </div>
   <div class="cd">
-    <div class="ct">💾 JSON 备份</div>
+    <div class="ct">💾 数据管理</div>
     <div class="bb">
-      <button class="bg2" onclick="exJ()">📤 导出JSON</button>
-      <button class="bb2" onclick="document.getElementById('fJ').click()">📥 导入JSON</button>
-      <button class="bb4" onclick="cl()">🗑️ 清空数据</button>
+      <button class="bg2" onclick="ej()">📤 导出JSON</button>
+      <button class="bu2" onclick="document.getElementById('fJ').click()">📥 导入JSON</button>
+      <button class="br" onclick="cl()">🗑️ 清空</button>
     </div>
-    <input type="file" id="fJ" accept=".json" style="display:none" onchange="imJ(event)">
-    <textarea class="tx" id="txA" readonly placeholder="数据管理..."></textarea>
+    <input type="file" id="fJ" accept=".json" style="display:none" onchange="ij(event)">
+    <textarea class="tx" id="tA" readonly placeholder="数据..."></textarea>
   </div>
 </div>
 
@@ -149,413 +137,272 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
   <div class="tn" onclick="sw(3)"><span class="i">⚙️</span>数据</div>
 </div>
 
+<div class="mo" id="mo" onclick="co()"><img id="mi"><span class="mc">✕</span></div>
+
 <script>
-var K='fd_v3';
-var SN={1:'1型·硬球',2:'2型·干硬',3:'3型·有裂痕',4:'4型·正常✅',5:'5型·软边',6:'6型·糊状⚠️',7:'7型·水样🚨'};
-var cd='', st=0, ph={};
-var ML=['b','l','d'];
-var MN={b:'🌅 早餐',l:'☀️ 午餐',d:'🌙 晚餐'};
-
-function T(){var d=new Date();return d.getFullYear()+'-'+Z(d.getMonth()+1)+'-'+Z(d.getDate());}
-function Z(n){return String(n).padStart(2,'0');}
-function F(ds){var p=ds.split('-');return p[0]+'年'+parseInt(p[1])+'月'+parseInt(p[2])+'日';}
-function N(){var d=new Date();return Z(d.getHours())+':'+Z(d.getMinutes());}
-function LD(){try{return JSON.parse(localStorage.getItem(K))||{};}catch(e){return{};}}
-function SD(d){try{localStorage.setItem(K,JSON.stringify(d));}catch(e){alert('存储空间不足');}}
-function GD(d){var a=LD();return a[d]||{b:{f:'',p:null,t:''},l:{f:'',p:null,t:''},d:{f:'',p:null,t:''},s:{t:0,n:'',tm:''}};}
-
+var K='fd4',SN={1:'1型·硬球',2:'2型·干硬',3:'3型·有裂痕',4:'4型·正常✅',5:'5型·软边',6:'6型·糊状⚠️',7:'7型·水样🚨'};
+var cd='',st=0,ph={},mL=['b','l','d'],mN={b:'🌅 早餐',l:'☀️ 午餐',d:'🌙 晚餐'},cY=0,cM=0,sD='';
+function T(){var d=new Date();return d.getFullYear()+'-'+Z(d.getMonth()+1)+'-'+Z(d.getDate())}
+function Z(n){return String(n).padStart(2,'0')}
+function F(ds){var p=ds.split('-');return p[0]+'年'+parseInt(p[1])+'月'+parseInt(p[2])+'日'}
+function N(){var d=new Date();return Z(d.getHours())+':'+Z(d.getMinutes())}
+function LD(){try{return JSON.parse(localStorage.getItem(K))||{}}catch(e){return{}}}
+function SD(d){try{localStorage.setItem(K,JSON.stringify(d))}catch(e){alert('存储不足')}}
+function GD(d){var a=LD();return a[d]||{b:{f:'',p:null,t:''},l:{f:'',p:null,t:''},d:{f:'',p:null,t:''},s:{t:0,n:'',tm:''}}}
 cd=T();
 
 // Build stool grid
-!function(){
+(function(){
   var g=document.getElementById('sG'),h='';
-  [[1,'🟤','1型 硬球'],[2,'🌭','2型 干硬'],[3,'🥖','3型 有裂痕'],[4,'🍌','4型 正常✅'],
-   [5,'🌯','5型 软边'],[6,'🥣','6型 糊状⚠️'],[7,'💧','7型 水样🚨']].forEach(function(i){
-    h+='<div class="sb" data-t="'+i[0]+'" onclick="pS('+i[0]+')"><span class="e">'+i[1]+'</span>'+i[2]+'</div>';
+  [[1,'🟤','1型 硬球'],[2,'🌭','2型 干硬'],[3,'🥖','3型 有裂痕'],[4,'🍌','4型 正常✅'],[5,'🌯','5型 软边'],[6,'🥣','6型 糊状⚠️'],[7,'💧','7型 水样🚨']].forEach(function(i){
+    h+='<div class="sb" data-t="'+i[0]+'" onclick="ps('+i[0]+')"><span class="e">'+i[1]+'</span>'+i[2]+'</div>'
   });
-  g.innerHTML=h;
-}();
+  g.innerHTML=h
+})();
 
 // Build meal UI
-!function(){
+(function(){
   var c=document.getElementById('mL'),h='';
-  ML.forEach(function(m){
-    h+='<div class="cd"><div class="ct">'+MN[m]+' <span class="bg" id="'+m+'B">未记录</span></div>';
-    h+='<div class="fr"><textarea class="fi" id="'+m+'F" placeholder="吃什么了？拍照或手动输入" rows="1"></textarea>';
-    h+='<label class="pb"><input type="file" accept="image/*" capture="environment" onchange="hP(this,\''+m+'\')"><span id="'+m+'I">📷</span></label></div>';
-    h+='<div class="hp-pp" id="'+m+'PP" style="display:none"><img id="'+m+'PI"><button class="ai-b" onclick="delP(\''+m+'\')">✕ 删除照片</button></div>';
-    h+='<div class="ar" id="'+m+'AR"></div>';
-    h+='<div class="st" id="'+m+'Tm"></div></div>';
+  mL.forEach(function(m){
+    h+='<div class="cd"><div class="ct">'+mN[m]+' <span class="bg" id="'+m+'B">未记录</span></div>';
+    h+='<div class="fr"><textarea class="fi" id="'+m+'F" placeholder="吃什么了？" rows="1"></textarea>';
+    h+='<label class="pb"><input type="file" accept="image/*" capture="environment" onchange="hp(this,\''+m+'\')"><span id="'+m+'I">📷</span></label></div>';
+    h+='<div class="pp" id="'+m+'PP" style="display:none"><img id="'+m+'PI"><button class="del-b" onclick="dp(\''+m+'\')">✕ 删除</button></div></div>'
   });
-  c.innerHTML=h;
-}();
+  c.innerHTML=h
+})();
 
-function loadD(){
+// Load day data
+function ld(){
   var day=GD(cd);
   document.getElementById('dL').textContent='📅 '+F(cd);
-  document.getElementById('dH').textContent=cd===T()?'📌 今天':'📌 '+F(cd);
-
   st=day.s.t||0;
-  document.querySelectorAll('#sG .sb').forEach(function(b){b.classList.toggle('on',parseInt(b.dataset.t)===st);});
+  document.querySelectorAll('#sG .sb').forEach(function(b){b.classList.toggle('on',parseInt(b.dataset.t)===st)});
   document.getElementById('sN').value=day.s.n||'';
-  document.getElementById('sTm').textContent=day.s.tm?'⏰ '+day.s.tm:'';
-  var sb=document.getElementById('sBadge');
+  document.getElementById('sT').textContent=day.s.tm?'⏰ '+day.s.tm:'';
+  var sb=document.getElementById('sB');
   sb.textContent=st>0?SN[st]:'请选择';sb.style.color=st>0?'var(--gr)':'var(--gy)';
-
-  ML.forEach(function(m){
-    var fd=day[m].f||'', pt=day[m].p||null, tm=day[m].t||'';
+  mL.forEach(function(m){
+    var fd=day[m].f||'',pt=day[m].p||null,tm=day[m].t||'';
     document.getElementById(m+'F').value=fd;
-    document.getElementById(m+'Tm').textContent=tm?'⏰ '+tm:'';
+    document.getElementById(m+'T').textContent=tm?'⏰ '+tm:'';
     ph[m]=pt;
-    var icon=document.getElementById(m+'I');
-    if(pt){
-      icon.innerHTML='<img src="'+pt+'" style="width:40px;height:40px;border-radius:8px;object-fit:cover;">';
-      var pp=document.getElementById(m+'PP');pp.style.display='block';
-      document.getElementById(m+'PI').src=pt;
-    }else{
-      icon.textContent='📷';
-      document.getElementById(m+'PP').style.display='none';
-    }
+    document.getElementById(m+'I').innerHTML=pt?'<img src="'+pt+'" style="width:38px;height:38px;border-radius:6px;object-fit:cover;">':'📷';
+    var pp=document.getElementById(m+'PP');pp.style.display=pt?'block':'none';
+    if(pt)document.getElementById(m+'PI').src=pt;
     var bg=document.getElementById(m+'B');
-    bg.textContent=(fd||pt)?'已记录✅':'未记录';
-    bg.style.color=(fd||pt)?'var(--gr)':'var(--gy)';
-  });
+    bg.textContent=(fd||pt)?'已记录✅':'未记录';bg.style.color=(fd||pt)?'var(--gr)':'var(--gy)'
+  })
 }
 
-function hP(inp,m){
+function hp(inp,m){
   var f=inp.files[0];if(!f)return;
   var r=new FileReader();
   r.onload=function(e){
     ph[m]=e.target.result;
-    var pp=document.getElementById(m+'PP');pp.style.display='block';
+    document.getElementById(m+'PP').style.display='block';
     document.getElementById(m+'PI').src=ph[m];
-    document.getElementById(m+'I').innerHTML='<img src="'+ph[m]+'" style="width:40px;height:40px;border-radius:8px;object-fit:cover;">';
-    var bg=document.getElementById(m+'B');
-    bg.textContent='已拍照📸';bg.style.color='var(--gr)';
+    document.getElementById(m+'I').innerHTML='<img src="'+ph[m]+'" style="width:38px;height:38px;border-radius:6px;object-fit:cover;">';
+    document.getElementById(m+'B').textContent='已拍照📸';document.getElementById(m+'B').style.color='var(--gr)'
   };
-  r.readAsDataURL(f);inp.value='';
+  r.readAsDataURL(f);inp.value=''
 }
 
-function delP(m){
+function dp(m){
   ph[m]=null;
   document.getElementById(m+'I').textContent='📷';
   document.getElementById(m+'PP').style.display='none';
   document.getElementById(m+'F').value='';
-  var bg=document.getElementById(m+'B');
-  bg.textContent='未记录';bg.style.color='var(--gy)';
-  var r=document.getElementById(m+'AR');
-  if(r){r.classList.remove('on');r.innerHTML='';}
+  document.getElementById(m+'B').textContent='未记录';document.getElementById(m+'B').style.color='var(--gy)'
 }
-function pS(t){
+
+function ps(t){
   st=t;
-  document.querySelectorAll('#sG .sb').forEach(function(b){b.classList.toggle('on',parseInt(b.dataset.t)===t);});
-  var sb=document.getElementById('sBadge');
-  sb.textContent=SN[t];sb.style.color='var(--gr)';
+  document.querySelectorAll('#sG .sb').forEach(function(b){b.classList.toggle('on',parseInt(b.dataset.t)===t)});
+  document.getElementById('sB').textContent=SN[t];document.getElementById('sB').style.color='var(--gr)'
 }
 
 function sv(){
   var data=LD();
-  if(!data[cd]) data[cd]={b:{f:'',p:null,t:''},l:{f:'',p:null,t:''},d:{f:'',p:null,t:''},s:{t:0,n:'',tm:''}};
+  if(!data[cd])data[cd]={b:{f:'',p:null,t:''},l:{f:'',p:null,t:''},d:{f:'',p:null,t:''},s:{t:0,n:'',tm:''}};
   var day=data[cd];
-  ML.forEach(function(m){
+  mL.forEach(function(m){
     var fd=document.getElementById(m+'F').value.trim();
-    if(fd||ph[m]){day[m].f=fd;if(ph[m])day[m].p=ph[m];if(!day[m].t)day[m].t=N();}
+    if(fd||ph[m]){day[m].f=fd;if(ph[m])day[m].p=ph[m];if(!day[m].t)day[m].t=N()}
   });
-  if(st>0){day.s.t=st;day.s.n=document.getElementById('sN').value.trim();if(!day.s.tm)day.s.tm=N();}
+  if(st>0){day.s.t=st;day.s.n=document.getElementById('sN').value.trim();if(!day.s.tm)day.s.tm=N()}
   SD(data);
-  alert('✅ '+F(cd)+' 已保存！');
-  loadD();initCal();upA();
+  if(document.getElementById('mo').style.display='flex')document.getElementById('mo').style.display='none';
+  ld();uh();ua()
 }
 
-function mv(d){
-  var dt=new Date(cd);dt.setDate(dt.getDate()+d);
-  cd=dt.getFullYear()+'-'+Z(dt.getMonth()+1)+'-'+Z(dt.getDate());loadD();
-}
+function mv(d){var dt=new Date(cd);dt.setDate(dt.getDate()+d);cd=dt.getFullYear()+'-'+Z(dt.getMonth()+1)+'-'+Z(dt.getDate());ld()}
 
-// Calendar history
-var calYear=0,calMonth=0,selDay='';
-
-function initCal(){
-  var d=new Date();
-  calYear=d.getFullYear();
-  calMonth=d.getMonth();
-  upH();
-}
-
-function mvMonth(dir){
-  calMonth+=dir;
-  if(calMonth>11){calMonth=0;calYear++;}
-  if(calMonth<0){calMonth=11;calYear--;}
-  upH();
-}
-
-function upH(){
+// Calendar
+function mm(d){cM+=d;if(cM>11){cM=0;cY++}if(cM<0){cM=11;cY--}uh()}
+function uh(){
   var data=LD();
-  document.getElementById('monthLabel').textContent=calYear+'年'+(calMonth+1)+'月';
-  var firstDay=new Date(calYear,calMonth,1).getDay();
-  var lastDate=new Date(calYear,calMonth+1,0).getDate();
-  var prevLast=new Date(calYear,calMonth,0).getDate();
-  var days=['日','一','二','三','四','五','六'];
-  var h='<div class="cal">';
-  days.forEach(function(d){h+='<div class="cal-hd">'+d+'</div>';});
+  document.getElementById('mLb').textContent=cY+'年'+(cM+1)+'月';
+  var fd=new Date(cY,cM,1).getDay(),ld2=new Date(cY,cM+1,0).getDate(),pl=new Date(cY,cM,0).getDate();
+  var days=['日','一','二','三','四','五','六'],h='<div class="cal">';
+  days.forEach(function(d){h+='<div class="cal-hd">'+d+'</div>'});
   var today=T();
-  for(var i=firstDay-1;i>=0;i--){
-    var cd=calYear+'-'+Z(calMonth)+'-'+Z(prevLast-i);
-    h+='<div class="cal-d other" onclick="pickDay(\''+cd+'\')"><span class="num">'+(prevLast-i)+'</span></div>';
+  for(var i=fd-1;i>=0;i--){var cd=Z(cM)+'-'+Z(pl-i);h+='<div class="cal-d other" onclick="pd(\''+cY+'-'+cd+'\')"><span class="num">'+(pl-i)+'</span></div>'}
+  for(var d2=1;d2<=ld2;d2++){
+    var dk=cY+'-'+Z(cM+1)+'-'+Z(d2),cls=(dk===today?'today ':'')+(dk===sD?'sel ':''),dd=data[dk],dot='';
+    if(dd){var s=dd.s&&dd.s.t?dd.s.t:0;if(s===0&&(dd.b.f||dd.l.f||dd.d.f))dot='<span class="dot p"></span>';else if(s>=1&&s<=3)dot='<span class="dot y"></span>';else if(s===4)dot='<span class="dot g"></span>';else if(s>=5)dot='<span class="dot r"></span>'}
+    h+='<div class="cal-d '+cls+'" onclick="pd(\''+dk+'\')"><span class="num">'+d2+'</span>'+dot+'</div>'
   }
-  for(var d2=1;d2<=lastDate;d2++){
-    var cd2=calYear+'-'+Z(calMonth+1)+'-'+Z(d2);
-    var cls=(cd2===today?'today ':'')+(cd2===selDay?'sel ':'');
-    var dayData=data[cd2];
-    var dot='';
-    if(dayData){
-      var st=dayData.s&&dayData.s.t?dayData.s.t:0;
-      if(st===0&&(dayData.b.f||dayData.l.f||dayData.d.f))dot='<span class="dot p"></span>';
-      else if(st>=1&&st<=3)dot='<span class="dot y"></span>';
-      else if(st===4)dot='<span class="dot g"></span>';
-      else if(st>=5)dot='<span class="dot r"></span>';
-    }
-    h+='<div class="cal-d '+cls+'" onclick="pickDay(\''+cd2+'\')"><span class="num">'+d2+'</span>'+dot+'</div>';
-  }
-  var remaining=42-(firstDay+lastDate);
-  for(var j=1;j<=remaining;j++){
-    var nY=calMonth+2>11?calYear+1:calYear;
-    var nM=calMonth+2>11?1:calMonth+2;
-    var cd3=nY+'-'+Z(nM)+'-'+Z(j);
-    h+='<div class="cal-d other" onclick="pickDay(\''+cd3+'\')"><span class="num">'+j+'</span></div>';
-  }
+  var rm=42-(fd+ld2);
+  for(var j=1;j<=rm;j++){h+='<div class="cal-d other"><span class="num">'+j+'</span></div>'}
   h+='</div>';
-  document.getElementById('calGrid').innerHTML=h;
-  if(selDay&&data[selDay])showDayDetail(selDay,data[selDay]);
+  document.getElementById('cG').innerHTML=h;
+  if(sD&&data[sD])sd(sD,data[sD])
 }
 
-function showDayDetail(dk,day){
-  var c=document.getElementById('dayDetail');
-  c.style.display='block';
-  if(!day||(!day.b.f&&!day.l.f&&!day.d.f&&!day.s.t)){
-    c.innerHTML='<div class="em" style="padding:12px;">📭 当天没有记录</div>';
-    return;
-  }
-  var h='<div class="cd dt-card"><div class="ct">📅 '+F(dk)+'</div>';
-  if(day.s.t>0){
-    h+='<div class="hs" style="padding:4px 0;display:flex;gap:5px;align-items:center;border-bottom:1px solid var(--bd);font-size:12px;">';
-    h+='<span style="color:var(--pu)">🚽</span><span>'+SN[day.s.t]+'</span>';
-    if(day.s.n)h+='<span style="color:var(--gy)"> — '+day.s.n+'</span>';
-    h+='</div>';
-  }
+function pd(dk){
+  sD=dk;var data=LD();uh();sd(dk,data[dk])
+}
+
+function sd(dk,day){
+  var c=document.getElementById('dD');c.style.display='block';
+  if(!day||(!day.b.f&&!day.l.f&&!day.d.f&&!day.s.t)){c.innerHTML='<div class="em" style="padding:10px">📭 无记录</div>';return}
+  var h='<div class="cd" style="margin:0"><div class="ct">📅 '+F(dk)+'</div>';
+  if(day.s.t>0){h+='<div style="padding:4px 0;display:flex;gap:5px;align-items:center;border-bottom:1px solid var(--bd);font-size:11px"><span style="color:var(--pu)">🚽</span><span>'+SN[day.s.t]+'</span>';if(day.s.n)h+='<span style="color:var(--gy)"> — '+day.s.n+'</span>';h+='</div>'}
   var LB={b:'🌅 早餐',l:'☀️ 午餐',d:'🌙 晚餐'};
   ['b','l','d'].forEach(function(k){
-    if(day[k].f||day[k].p){
-      h+='<div class="hm" style="padding:5px 0;display:flex;gap:6px;align-items:flex-start;border-bottom:1px solid var(--bd);font-size:12px;">';
-      h+='<span style="color:var(--dg);font-weight:600;min-width:40px;flex-shrink:0;">'+LB[k]+'</span>';
-      h+='<span>'+(day[k].f||'')+'</span>';
-      if(day[k].p)h+='<img class="hp" src="'+day[k].p+'" onclick="vP(\''+day[k].p+'\')" style="width:40px;height:40px;border-radius:6px;object-fit:cover;cursor:pointer;margin-left:auto;">';
-      h+='</div>';
-    }
+    if(day[k].f||day[k].p){h+='<div class="hm"><span class="hl">'+LB[k]+'</span><span>'+(day[k].f||'')+'</span>';if(day[k].p)h+='<img class="hp" src="'+day[k].p+'" onclick="vp(\''+day[k].p+'\')">';h+='</div>'}
   });
-  h+='</div>';
-  c.innerHTML=h;
+  h+='</div>';c.innerHTML=h
 }
 
-function vP(s){if(!s)return;var m=document.getElementById('mo');document.getElementById('mi').src=s;m.style.display='flex';}
-function cP(){document.getElementById('mo').style.display='none';}
+function vp(s){if(!s)return;document.getElementById('mi').src=s;document.getElementById('mo').style.display='flex'}
+function co(){document.getElementById('mo').style.display='none'}
 
 // Analysis
-function upA(){
-  var data=LD(), c=document.getElementById('aL');
-  var dates=Object.keys(data).sort();
-  if(dates.length<2){c.innerHTML='<div class="em">📊 需要至少2天记录</div>';return;}
+function ua(){
+  var data=LD(),c=document.getElementById('aL'),dates=Object.keys(data).sort();
+  if(dates.length<2){c.innerHTML='<div class="em">📊 需至少2天记录</div>';return}
   var fs={};
-  dates.forEach(function(d){
-    var day=data[d];
-    ['b','l','d'].forEach(function(k){
-      if(day[k].f){day[k].f.split(/[ ，,、\s]+/).forEach(function(f){f=f.trim();if(f){if(!fs[f])fs[f]={c:0,ss:[]};fs[f].c++;if(day.s.t>0)fs[f].ss.push(day.s.t);}});}
-    });
-  });
-  var foods=Object.entries(fs).sort(function(a,b){return b[1].c-a[1].c;});
+  dates.forEach(function(d){var day=data[d];['b','l','d'].forEach(function(k){if(day[k].f){day[k].f.split(/[ ，,、\s]+/).forEach(function(f){f=f.trim();if(f){if(!fs[f])fs[f]={c:0,ss:[]};fs[f].c++;if(day.s.t>0)fs[f].ss.push(day.s.t)}})}})});
+  var foods=Object.entries(fs).sort(function(a,b){return b[1].c-a[1].c});
   var bad=[],good=[],norm=[];
-  foods.forEach(function(e){
-    var s=e[1],avg=s.ss.length>0?(s.ss.reduce(function(a,b){return a+b;},0)/s.ss.length):0;
-    if(avg>=6&&s.ss.length>=2)bad.push({n:e[0],c:s.c,a:avg});
-    else if(avg<=3&&avg>0&&s.ss.length>=2)good.push({n:e[0],c:s.c,a:avg});
-    else norm.push({n:e[0],c:s.c,a:avg});
-  });
-  var td=dates.filter(function(d){return data[d].b.f||data[d].l.f||data[d].d.f;}).length;
-  var h='<div class="ax"><div class="at">📋 概况</div><div class="ac">';
-  h+='<div class="ai2"><span>记录天数</span><span>'+td+' 天</span></div>';
-  h+='<div class="ai2"><span>食物种类</span><span>'+foods.length+' 种</span></div>';
-  h+='<div class="ai2"><span>大便记录</span><span>'+dates.filter(function(d){return data[d].s.t>0;}).length+' 天</span></div></div></div>';
-  if(bad.length>0){h+='<div class="ax"><div class="at">⚠️ 可能引起溏便的食物</div><div class="ac">';bad.forEach(function(f){h+='<div class="ai2"><span style="font-weight:600">'+f.n+'</span><span style="color:var(--rd)">💧 平均'+f.a.toFixed(1)+'型（'+f.c+'次）</span></div>';});h+='</div></div>';}
-  if(good.length>0){h+='<div class="ax"><div class="at">✅ 大便正常时吃的食物</div><div class="ac">';good.forEach(function(f){h+='<div class="ai2"><span style="font-weight:600">'+f.n+'</span><span style="color:var(--gr)">👍 平均'+f.a.toFixed(1)+'型（'+f.c+'次）</span></div>';});h+='</div></div>';}
-  if(norm.length>0){h+='<div class="ax"><div class="at">📊 食物频率</div><div class="ac">';norm.forEach(function(f){h+='<div class="ai2"><span>'+f.n+'</span><span style="color:var(--gy)">'+f.c+'次</span></div>';});h+='</div></div>';}
-  c.innerHTML=h;
+  foods.forEach(function(e){var s=e[1],avg=s.ss.length>0?(s.ss.reduce(function(a,b){return a+b},0)/s.ss.length):0;if(avg>=6&&s.ss.length>=2)bad.push({n:e[0],c:s.c,a:avg});else if(avg<=3&&avg>0&&s.ss.length>=2)good.push({n:e[0],c:s.c,a:avg});else norm.push({n:e[0],c:s.c,a:avg})});
+  var td=dates.filter(function(d){return data[d].b.f||data[d].l.f||data[d].d.f}).length;
+  var h='<div class="cd"><div class="ct">📋 概况</div><div class="ai2"><span>记录天数</span><span>'+td+' 天</span></div><div class="ai2"><span>食物种类</span><span>'+foods.length+' 种</span></div><div class="ai2"><span>大便记录</span><span>'+dates.filter(function(d){return data[d].s.t>0}).length+' 天</span></div></div>';
+  if(bad.length>0){h+='<div class="cd"><div class="ct">⚠️ 可能引起溏便的食物</div>';bad.forEach(function(f){h+='<div class="ai2"><span style="font-weight:600">'+f.n+'</span><span style="color:var(--rd)">💧 平均'+f.a.toFixed(1)+'型（'+f.c+'次）</span></div>'});h+='</div>'}
+  if(good.length>0){h+='<div class="cd"><div class="ct">✅ 大便正常时的食物</div>';good.forEach(function(f){h+='<div class="ai2"><span style="font-weight:600">'+f.n+'</span><span style="color:var(--gr)">👍 平均'+f.a.toFixed(1)+'型（'+f.c+'次）</span></div>'});h+='</div>'}
+  if(norm.length>0){h+='<div class="cd"><div class="ct">📊 食物频率</div>';norm.forEach(function(f){h+='<div class="ai2"><span>'+f.n+'</span><span style="color:var(--gy)">'+f.c+'次</span></div>'});h+='</div>'}
+  c.innerHTML=h
 }
 
-// Smart import - auto detect format and columns
-function smartImport(ev){
+// Data management
+function ej(){
+  var d=LD(),json=JSON.stringify(d,null,2);
+  document.getElementById('tA').value=json;
+  var b=new Blob(['\uFEFF'+json],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');
+  a.href=u;a.download='饮食助手_'+T()+'.json';a.click();URL.revokeObjectURL(u)
+}
+function ij(ev){
   var f=ev.target.files[0];if(!f)return;
-  var ir=document.getElementById('irM');
-  ir.textContent='⏳ 正在解析...';
+  var r=new FileReader();
+  r.onload=function(e){try{var d=JSON.parse(e.target.result),ex=LD();Object.keys(d).forEach(function(k){ex[k]=d[k]});SD(ex);document.getElementById('tA').value='✅ 导入 '+Object.keys(d).length+' 天';ld();uh();ua()}catch(err){alert('导入失败')}};
+  r.readAsText(f);ev.target.value=''
+}
+function cl(){
+  if(!confirm('确定清空所有数据？不可恢复！'))return;
+  localStorage.removeItem(K);document.getElementById('tA').value='';ld();uh();ua()
+}
+
+// Smart import
+function si(ev){
+  var f=ev.target.files[0];if(!f)return;
+  var ir=document.getElementById('iM');ir.textContent='⏳ 解析中...';
   var nm=f.name.toLowerCase();
-  if(nm.endsWith('.xlsx')||nm.endsWith('.xls')){readExcel(f,ir);}
-  else if(nm.endsWith('.docx')){readDocx(f,ir);}
-  else{var r=new FileReader();r.onload=function(e){parseSmartText(e.target.result,ir);};r.readAsText(f);}
-  ev.target.value='';
+  if(nm.endsWith('.xlsx')||nm.endsWith('.xls')){re(f,ir)}
+  else if(nm.endsWith('.docx')){rd(f,ir)}
+  else{var r2=new FileReader();r2.onload=function(e){pt(e.target.result,ir)};r2.readAsText(f)}
+  ev.target.value=''
 }
-
-function readExcel(f,ir){
-  if(typeof XLSX==='undefined'){ir.textContent='⚠️ 库未加载，试试CSV';return;}
+function re(f,ir){
+  if(typeof XLSX==='undefined'){ir.textContent='⚠️ 需加载Excel库';return}
   var r=new FileReader();
-  r.onload=function(e){
-    try{
-      var wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
-      var rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
-      parseSmartTable(rows,ir);
-    }catch(err){ir.textContent='❌ '+err.message;}
-  };
-  r.readAsArrayBuffer(f);
+  r.onload=function(e){try{var wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});var rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});sm(rows,ir)}catch(err){ir.textContent='❌ '+err.message}};
+  r.readAsArrayBuffer(f)
 }
-
-function readDocx(f,ir){
+function rd(f,ir){
   var r=new FileReader();
-  r.onload=function(e){
-    try{
-      var d=new Uint8Array(e.target.result),txt='';
-      for(var i=0;i<d.length;i+=10000)
-        txt+=new TextDecoder('utf-8').decode(d.subarray(i,Math.min(i+10000,d.length)),{stream:true});
-      var s=txt.indexOf('word/document.xml');
-      if(s<0){ir.textContent='⚠️ 格式不支持';return;}
-      var x=txt.substring(txt.indexOf('<w:body',s),txt.indexOf('</w:body>',s));
-      parseSmartText(x.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim(),ir);
-    }catch(err){ir.textContent='❌ '+err.message;}
-  };
-  r.readAsArrayBuffer(f);
+  r.onload=function(e){try{var d=new Uint8Array(e.target.result),txt='';for(var i=0;i<d.length;i+=10000)txt+=new TextDecoder('utf-8').decode(d.subarray(i,Math.min(i+10000,d.length)),{stream:true});var s=txt.indexOf('word/document.xml');if(s<0){ir.textContent='⚠️ 格式不支持';return}var x=txt.substring(txt.indexOf('<w:body',s),txt.indexOf('</w:body>',s));pt(x.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim(),ir)}catch(err){ir.textContent='❌ '+err.message}};
+  r.readAsArrayBuffer(f)
 }
-
-function parseSmartTable(rows,ir){
-  if(!rows||rows.length<2){parseSmartText(rows.join('\n'),ir);return;}
-  var hdrs=rows[0].map(function(h){return String(h).trim().toLowerCase();});
-  var cm={d:-1,s:-1,b:-1,l:-1,di:-1,n:-1};
-  hdrs.forEach(function(h,i){
-    if(/日期|date|时间/.test(h))cm.d=i;
-    else if(/大便|便|stool|poop/.test(h))cm.s=i;
-    else if(/早餐|早饭|breakfast/.test(h))cm.b=i;
-    else if(/午餐|中饭|lunch/.test(h))cm.l=i;
-    else if(/晚餐|晚饭|dinner/.test(h))cm.di=i;
-    else if(/备注|note/.test(h))cm.n=i;
-  });
-  if(cm.d<0){for(var ri=0;ri<Math.min(3,rows.length);ri++)for(var ci=0;ci<rows[ri].length;ci++)if(String(rows[ri][ci]).match(/\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}/)){cm.d=ci;break;}}
-  if(cm.d<0)cm.d=0;
-  var used={};used[cm.d]=1;
-  if(cm.s<0){var ci1=cm.d+1;while(used[ci1])ci1++;cm.s=ci1;used[ci1]=1;}
-  if(cm.b<0){var ci2=cm.s+1;while(used[ci2])ci2++;cm.b=ci2;used[ci2]=1;}
-  if(cm.l<0){var ci3=cm.b+1;while(used[ci3])ci3++;cm.l=ci3;used[ci3]=1;}
-  if(cm.di<0){var ci4=cm.l+1;while(used[ci4])ci4++;cm.di=ci4;}
+function sm(rows,ir){
+  if(!rows||rows.length<2){pt(rows.join('\n'),ir);return}
+  var hd=rows[0].map(function(h){return String(h).trim().toLowerCase()}),cm={d:-1,s:-1,b:-1,l:-1,di:-1,n:-1};
+  hd.forEach(function(h,i){if(/日期|date/.test(h))cm.d=i;else if(/大便|便|stool/.test(h))cm.s=i;else if(/早餐|早饭|breakfast/.test(h))cm.b=i;else if(/午餐|中饭|lunch/.test(h))cm.l=i;else if(/晚餐|晚饭|dinner/.test(h))cm.di=i;else if(/备注|note/.test(h))cm.n=i});
+  if(cm.d<0){for(var ri=0;ri<Math.min(3,rows.length);ri++)for(var ci=0;ci<rows[ri].length;ci++)if(String(rows[ri][ci]).match(/\d{4}[\/\-]\d{1,2}[\/\-]\d{1,2}/)){cm.d=ci;break}}
+  if(cm.d<0)cm.d=0;var used={};used[cm.d]=1;
+  if(cm.s<0){var c1=cm.d+1;while(used[c1])c1++;cm.s=c1;used[c1]=1}
+  if(cm.b<0){var c2=cm.s+1;while(used[c2])c2++;cm.b=c2;used[c2]=1}
+  if(cm.l<0){var c3=cm.b+1;while(used[c3])c3++;cm.l=c3;used[c3]=1}
+  if(cm.di<0){var c4=cm.l+1;while(used[c4])c4++;cm.di=c4}
   var imp={};
   for(var ri2=1;ri2<rows.length;ri2++){
     var rw=rows[ri2];if(!rw||!rw[cm.d])continue;
     var dv=String(rw[cm.d]).trim(),dk='';
-    if(typeof rw[cm.d]==='number'&&rw[cm.d]>40000){var dd=new Date((rw[cm.d]-25569)*86400*1000);dk=dd.getFullYear()+'-'+Z(dd.getMonth()+1)+'-'+Z(dd.getDate());}
-    else{var dm=dv.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);if(dm)dk=dm[1]+'-'+Z(dm[2])+'-'+Z(dm[3]);else{var dm2=dv.match(/(\d{1,2})[月\/](\d{1,2})日?/);if(dm2)dk='2026-'+Z(dm2[1])+'-'+Z(dm2[2]);}}
+    if(typeof rw[cm.d]==='number'&&rw[cm.d]>40000){var dd=new Date((rw[cm.d]-25569)*86400*1000);dk=dd.getFullYear()+'-'+Z(dd.getMonth()+1)+'-'+Z(dd.getDate())}
+    else{var dm=dv.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);if(dm)dk=dm[1]+'-'+Z(dm[2])+'-'+Z(dm[3]);else{var dm2=dv.match(/(\d{1,2})[月\/](\d{1,2})日?/);if(dm2)dk='2026-'+Z(dm2[1])+'-'+Z(dm2[2])}}
     if(!dk)continue;
     if(!imp[dk])imp[dk]={b:{f:'',p:null,t:''},l:{f:'',p:null,t:''},d:{f:'',p:null,t:''},s:{t:0,n:'',tm:''}};
     var sv=cm.s>=0?String(rw[cm.s]||'').trim():'',bv=cm.b>=0?String(rw[cm.b]||'').trim():'',lv=cm.l>=0?String(rw[cm.l]||'').trim():'',dv2=cm.di>=0?String(rw[cm.di]||'').trim():'',nv=cm.n>=0?String(rw[cm.n]||'').trim():'';
-    if(bv&&bv!=='-'&&bv!=='—')imp[dk].b.f=bv.replace(/[，,、]/g,' ');
-    if(lv&&lv!=='-'&&lv!=='—')imp[dk].l.f=lv.replace(/[，,、]/g,' ');
-    if(dv2&&dv2!=='-'&&dv2!=='—')imp[dk].d.f=dv2.replace(/[，,、]/g,' ');
-    if(nv&&nv!=='-'&&nv!=='—')imp[dk].s.n=nv;
-    if(sv&&sv!=='-'&&sv!=='—'){
-      var sn=parseInt(sv);
-      if(sn>=1&&sn<=7)imp[dk].s.t=sn;
-      else if(sv.indexOf('正常')>=0)imp[dk].s.t=4;
-      else if(sv.indexOf('溏')>=0||sv.indexOf('稀')>=0)imp[dk].s.t=6;
-    }
+    if(bv&&bv!=='-'&&bv!=='—')imp[dk].b.f=bv.replace(/[，,、]/g,' ');if(lv&&lv!=='-'&&lv!=='—')imp[dk].l.f=lv.replace(/[，,、]/g,' ');if(dv2&&dv2!=='-'&&dv2!=='—')imp[dk].d.f=dv2.replace(/[，,、]/g,' ');if(nv&&nv!=='-'&&nv!=='—')imp[dk].s.n=nv;
+    if(sv&&sv!=='-'&&sv!=='—'){var sn=parseInt(sv);if(sn>=1&&sn<=7)imp[dk].s.t=sn;else if(sv.indexOf('正常')>=0)imp[dk].s.t=4;else if(sv.indexOf('溏')>=0||sv.indexOf('稀')>=0)imp[dk].s.t=6}
   }
-  mergeImport(imp,ir);
+  mi(imp,ir)
 }
-
-function parseSmartText(text,ir){
-  var lines=text.split('\n').filter(function(l){return l.trim();}),imp={};
+function pt(text,ir){
+  var lines=text.split('\n').filter(function(l){return l.trim()}),imp={};
   for(var li=0;li<lines.length;li++){
-    var line=lines[li].trim();
-    if(!line||line.match(/^[<日期Date]/))continue;
-    var parts=line.split(/[\t,;，；、|]+/);
-    if(parts.length<2)continue;
+    var line=lines[li].trim();if(!line||line.match(/^[<日期Date]/))continue;
+    var parts=line.split(/[\t,;，；、|]+/);if(parts.length<2)continue;
     var dk='';
     for(var pi=0;pi<parts.length;pi++){
-      var p=parts[pi].trim();
-      var dm=p.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
-      if(!dm)dm=p.match(/(\d{1,2})[月\/](\d{1,2})日?/);
-      if(dm){dk=(dm[1]?dm[1]:'2026')+'-'+Z(dm[2].replace('月','').replace('日',''))+'-'+Z((dm[3]||'').replace('日',''));parts.splice(pi,1);break;}
+      var p=parts[pi].trim(),dm=p.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);if(!dm)dm=p.match(/(\d{1,2})[月\/](\d{1,2})日?/);if(dm){dk=(dm[1]?dm[1]:'2026')+'-'+Z(dm[2].replace('月','').replace('日',''))+'-'+Z((dm[3]||'').replace('日',''));parts.splice(pi,1);break}
     }
-    if(!dk)continue;
-    if(!imp[dk])imp[dk]={b:{f:'',p:null,t:''},l:{f:'',p:null,t:''},d:{f:'',p:null,t:''},s:{t:0,n:'',tm:''}};
-    var meals=[],st='';
-    for(var pj=0;pj<parts.length;pj++){
-      var v=parts[pj].trim();if(!v)continue;
-      var sn=parseInt(v);
-      if(sn>=1&&sn<=7&&!st){st=v;continue;}
-      if(v.match(/正常|溏|稀/)&&!st){st=v;continue;}
-      meals.push(v);
-    }
-    if(st){var sn2=parseInt(st);if(sn2>=1&&sn2<=7)imp[dk].s.t=sn2;else if(st.indexOf('正常')>=0)imp[dk].s.t=4;else if(st.indexOf('溏')>=0||st.indexOf('稀')>=0)imp[dk].s.t=6;}
-    for(var mi=0;mi<Math.min(3,meals.length);mi++){var mk=mi===0?'b':mi===1?'l':'d';imp[dk][mk].f=meals[mi].replace(/[，,、]/g,' ');}
+    if(!dk)continue;if(!imp[dk])imp[dk]={b:{f:'',p:null,t:''},l:{f:'',p:null,t:''},d:{f:'',p:null,t:''},s:{t:0,n:'',tm:''}};
+    var meals=[],s2='';
+    for(var pj=0;pj<parts.length;pj++){var v=parts[pj].trim();if(!v)continue;var sn2=parseInt(v);if(sn2>=1&&sn2<=7&&!s2){s2=v;continue}if(v.match(/正常|溏|稀/)&&!s2){s2=v;continue}meals.push(v)}
+    if(s2){var sn3=parseInt(s2);if(sn3>=1&&sn3<=7)imp[dk].s.t=sn3;else if(s2.indexOf('正常')>=0)imp[dk].s.t=4;else if(s2.indexOf('溏')>=0||s2.indexOf('稀')>=0)imp[dk].s.t=6}
+    for(var mi2=0;mi2<Math.min(3,meals.length);mi2++){var mk=mi2===0?'b':mi2===1?'l':'d';imp[dk][mk].f=meals[mi2].replace(/[，,、]/g,' ')}
   }
-  mergeImport(imp,ir);
+  mi(imp,ir)
 }
-
-function mergeImport(imp,ir){
+function mi(imp,ir){
   var k2=Object.keys(imp);
-  if(k2.length===0){if(ir)ir.textContent='❌ 未识别到数据';else document.getElementById('irM').textContent='❌ 未识别到数据';return;}
-  var ex=LD();k2.forEach(function(k){ex[k]=imp[k];});SD(ex);
-  if(ir)ir.textContent='✅ 导入 '+k2.length+' 条';
-  alert('✅ 成功导入 '+k2.length+' 条！');
-  loadD();upH();upA();
+  if(k2.length===0){if(ir)ir.textContent='❌ 未识别到数据';else document.getElementById('iM').textContent='❌ 未识别';return}
+  var ex=LD();k2.forEach(function(k){ex[k]=imp[k]});SD(ex);
+  var msg='✅ 导入 '+k2.length+' 天';
+  if(ir)ir.textContent=msg;else document.getElementById('iM').textContent=msg;
+  alert('✅ 成功导入 '+k2.length+' 天！');ld();uh();ua()
 }
-
-function pI(){
+function pi(){
   var t=document.getElementById('pA').value.trim();
-  if(!t){document.getElementById('irM').textContent='⚠️ 请先粘贴数据';return;}
-  parseSmartText(t,document.getElementById('irM'));
-  document.getElementById('pA').value='';
+  if(!t){document.getElementById('iM').textContent='⚠️ 请粘贴数据';return}
+  pt(t,document.getElementById('iM'));document.getElementById('pA').value=''
 }
 
-// JSON export/import/clear
-function exJ(){
-  var d=LD(),json=JSON.stringify(d,null,2);
-  document.getElementById('txA').value=json;
-  var b=new Blob(['\uFEFF'+json],{type:'application/json'});
-  var u=URL.createObjectURL(b),a=document.createElement('a');
-  a.href=u;a.download='\u996E\u98DF\u52A9\u624B_'+T()+'.json';a.click();URL.revokeObjectURL(u);
-}
-function imJ(ev){
-  var f=ev.target.files[0];if(!f)return;
-  var r=new FileReader();
-  r.onload=function(e){
-    try{var d=JSON.parse(e.target.result);var ex=LD();Object.keys(d).forEach(function(k){ex[k]=d[k];});SD(ex);
-    document.getElementById('txA').value='\u2705 \u5BFC\u5165 '+Object.keys(d).length+' \u5929';loadD();upH();upA();
-    }catch(err){alert('\u5BFC\u5165\u5931\u8D25');}
-  };
-  r.readAsText(f);ev.target.value='';
-}
-function cl(){
-  if(!confirm('\u786E\u5B9A\u6E05\u7A7A\u6240\u6709\u6570\u636E\uFF1F\u4E0D\u53EF\u6062\u590D\uFF01'))return;
-  localStorage.removeItem(K);document.getElementById('txA').value='';loadD();upH();upA();
-}
-
-// Tab{
+// Tab
+function sw(i){
   var ids=['p0','p1','p2','p3'];
-  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on')});
   document.getElementById(ids[i]).classList.add('on');
-  document.querySelectorAll('.tn').forEach(function(t,j){t.classList.toggle('on',j===i);});
-  if(i===1)upH();if(i===2)upA();
-  if(i===3){var d=LD();document.getElementById('txA').value=Object.keys(d).length>0?'共 '+Object.keys(d).length+' 天记录':'暂无数据';}
+  document.querySelectorAll('.tn').forEach(function(t,j){t.classList.toggle('on',j===i)});
+  if(i===1)uh();if(i===2)ua();if(i===3){var d=LD();document.getElementById('tA').value=Object.keys(d).length>0?'共 '+Object.keys(d).length+' 天':'暂无数据'}
 }
 
-// Modal
-document.body.insertAdjacentHTML('beforeend','<div class="mo" id="mo" onclick="cP()" style="position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;display:none;justify-content:center;align-items:center;"><img class="mi" id="mi" style="max-width:90%;max-height:70%;border-radius:8px;"></div>');
-
-loadD();initCal();upA();
+// Init
+cY=parseInt(T().split('-')[0]);cM=parseInt(T().split('-')[1])-1;
+(function(){var d=new Date();cY=d.getFullYear();cM=d.getMonth()})();
+ld();uh();ua()
 </script>
 </body>
 </html>
